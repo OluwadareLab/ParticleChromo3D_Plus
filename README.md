@@ -26,3 +26,18 @@
 * exampleIfs: Synthetic and Real Hi-C datasets examples. <br />
 * flask: Source Code and utility's used.<br />
 * website: front end code
+
+**2.	Hi-C Data example data in this study:**
+-----------------------------------------------------------
+The GM12878 cell Hi-C dataset, GEO Accession number GSE63525, was downloaded from [GSDB](http://sysbio.rnet.missouri.edu/3dgenome/GSDB/details.php?id=GM12878) with GSDB ID: OO7429SF
+
+**3.	Input matrix file format:**
+-----------------------------------------------------------
+
+Square Matrix Input format: The square matrix is a space seperated N by N intra-chromosomal contact matrix derived from Hi-C data, where N is the number of equal-sized regions of a chromosome.
+
+**4.	Dependencies Installation:**
+-----------------------------------------------------------
+
+Docker <br />
+
