@@ -1,0 +1,5 @@
+requests==2.27.1
+Biopython==1.78
+scipy
+numpy
+secure-smtplib
