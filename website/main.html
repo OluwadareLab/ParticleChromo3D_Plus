@@ -38,15 +38,15 @@ Email Upon Completion (required): <input type="text" id="email" value=""><br><br
 
 
 <p>Upload Matrix (square matrix tab separated)</p>
-<!--<object type="text/html" data="http://davidvadnais.com:5001/form"></object>-->
+<!--<object type="text/html" data="http://biomlearn.uccs.edu:5001/form"></object>-->
 
-<form action = "http://davidvadnais.com:5001/upload" method = "POST" enctype = "multipart/form-data">
+<form action = "http://biomlearn.uccs.edu:5001/upload" method = "POST" enctype = "multipart/form-data">
         <input href="/" class="btn-bgstroke" type = "file" name = "file" />
         <input href="/" class="btn-bgstroke" type="submit" value="Upload">
 </form>
 <button  class="btn-bgstroke2" onclick="customSubmit()">Submit</button>
 
-<!--<a href="http://davidvadnais.com:5001/uploaded">See avalable pdbs</a>-->
+<!--<a href="http://biomlearn.uccs.edu:5001/uploaded">See avalable pdbs</a>-->
 
 
 <p>Example Interaction Frequency Matrix for 1MB GM12878 (Knight-Ruiz normalized)</p>
@@ -78,13 +78,13 @@ Email Upon Completion (required): <input type="text" id="email" value=""><br><br
 </select>
 
 
-<!--<a "davidvadnais.com:8080/success" class="btn-bgstroke"  onclick="myFunction()">Submit</a>-->
+<!--<a "biomlearn.uccs.edu:8080/success" class="btn-bgstroke"  onclick="myFunction()">Submit</a>-->
 <br>
 <button  class="btn-bgstroke2" onclick="myFunction()">Submit</button>
 <script>
 function myFunction() { 
 	window.open(
-                "http://davidvadnais.com:5001/process?ifname=" + document.getElementById("myText").value
+                "http://biomlearn.uccs.edu:5001/process?ifname=" + document.getElementById("myText").value
 		+ "&ss=" + document.getElementById("swarmSize").value
                 + "&itt=" +  document.getElementById("itt").value
                 + "&threshold=" +  document.getElementById("threshold").value
@@ -99,7 +99,7 @@ function myFunction() {
 
 function customSubmit() {
         window.open(
-                "http://davidvadnais.com:5001/process?ifname=uploaded_file"
+                "http://biomlearn.uccs.edu:5001/process?ifname=uploaded_file"
                 + "&ss=" + document.getElementById("swarmSize").value
                 + "&itt=" +  document.getElementById("itt").value
                 + "&threshold=" +  document.getElementById("threshold").value
