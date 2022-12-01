@@ -35,7 +35,7 @@ def home():
   # Custom upload
   if (ifname == "uploaded_file"):
     list_of_files = glob.glob('/apt/repo/*')
-    ifname = max(list_of_files, key=os.path.getctime)
+    ifname = os.path.basename(max(list_of_files, key=os.path.getctime))
 
  
   # cmd
@@ -46,13 +46,12 @@ def home():
     +  " -lf " + lf \
     +  " --outfile " + outFile \
     +  " --email " + email \
-    + " /apt/repo/" + ifname
+    + " /apt/upload/" + ifname
   if (len(email) < 2):
     return "ERROR: Email required"
   else:
     p = subprocess.Popen(thecmd, shell=True, stdout=subprocess.PIPE, 
                      stderr=subprocess.PIPE)
-    #subprocess.check_output(thecmd, shell=True) 
     return "Processing has begun. You will recieve an email upon its completion."  
     #return subprocess.check_output(thecmd, shell=True) 
   #return subprocess.check_output("python3 Ps.py chr23_matrix.txt", shell=True) 
