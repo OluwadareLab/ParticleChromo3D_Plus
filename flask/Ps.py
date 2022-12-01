@@ -249,7 +249,7 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 
-gmail_pass = "mthgbrwzyhzkfvlc"
+gmail_pass = ""
 user = "david.vadnaiscs@gmail.com"
 host = "smtp.gmail.com"
 port = 465
