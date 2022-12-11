@@ -1,4 +1,4 @@
-<img align="left" src="logo.png">
+<img align="left" src="logo_1.png">
 
 # ParticleChromo3D+: A Web-server implementation of ParticleChromo3D for 3D chromosome structure reconstruction
 ------------------------------------------------------------------------------------------------------------------------------------
