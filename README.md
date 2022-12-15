@@ -1,4 +1,4 @@
-<img align="left" src="logo_1.png"  width="275" height="275" > 
+<img align="left" src="logo_1.png"  width="240" height="240" > 
 
 # ParticleChromo3D+: A Web-server implementation of ParticleChromo3D for 3D chromosome structure reconstruction
 ------------------------------------------------------------------------------------------------------------------------------------
