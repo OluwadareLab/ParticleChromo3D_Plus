@@ -25,6 +25,8 @@
 * configs: Python Dependencies <br />
 * exampleIfs: Synthetic and Real Hi-C datasets examples. <br />
 * flask: Source Code and utility's used.<br />
+* help: Example scripts to help a user get started with our webserver. <br />
+* results: Output structures generated for all the experiments performed. <br />
 * website: front end code
 
 **2.	Hi-C Data example data in this study:**
