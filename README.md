@@ -1,6 +1,6 @@
 <img align="left" src="logo_1.png"  width="240" height="240" > 
 
-# ParticleChromo3D+: A Web-server implementation of ParticleChromo3D for 3D chromosome structure reconstruction
+# ParticleChromo3D+: a Web Server for ParticleChromo3D Algorithm for 3D Chromosome Structure Reconstruction
 ------------------------------------------------------------------------------------------------------------------------------------
 **OluwadareLab,**
 **University of Colorado, Colorado Springs**
