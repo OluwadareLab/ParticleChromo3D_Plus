@@ -45,6 +45,15 @@ Docker <br />
 
 **5. Usage - Docker**
 -----------------------------------------------------------
+### Base usage
 In the base folder build the image with ```docker build -t particlechromo3D:latest .```
 
 Then run the container with ```docker run -d --network="host" particlechromo3d:latest```
+
+### Volumes
+Working with volumes:
+* ```docker volume create ${VOLUME_NAME}```
+* ```docker volume inspect ${VOLUME_NAME}```
+* ```docker volume ls```
+* ```docker volume rm ${VOLUME_NAME}```
+
