@@ -50,10 +50,11 @@ In the base folder build the image with ```docker build -t particlechromo3D:late
 
 Then run the container with ```docker run -d --network="host" particlechromo3d:latest```
 
-### Volumes
+### Volumes (Persisting Data)
 Working with volumes:
 * ```docker volume create ${VOLUME_NAME}```
 * ```docker volume inspect ${VOLUME_NAME}```
 * ```docker volume ls```
 * ```docker volume rm ${VOLUME_NAME}```
 
+* ```docker run -d --mount source=particlechromo3dmnt,target=/apt -p 5001:5001 -p 8080:8080 particlechromo3d:latest```
