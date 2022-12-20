@@ -23,6 +23,8 @@ RUN mkdir -p /apt/templates
 RUN mkdir /apt/repo/
 RUN mkdir /apt/out
 
+#VOLUME /apt/upload
+
 COPY config/requirements.txt /apt
 COPY flask/* /apt/
 COPY exampleIfs/* /apt/repo/

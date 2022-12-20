@@ -236,8 +236,8 @@ print("Best Spearman correlation Dist vs. Reconstructed Dist  : ", bestSpearm)
 print("Best Pearson correlation Dist vs. Reconstructed Dist: ", bestPearsonRHO) 
 Write_Log(outFilePtr +".log", inFilePtr, bestAlpha, bestCost, bestSpearm, bestPearsonRHO)
 
-#'<br><br>neo4j by first going to https://davidvadnais.com:5000/neo and then https://davidvadnais.com:7474/browser/')
-print('<br><br>Download pdb at: http://davidvadnais.com:5001/download?ofname='+outFilePtr)
+#'<br><br>neo4j by first going to https://biomlearn.uccs.edu:5000/neo and then https://biomlearn.uccs.edu:7474/browser/')
+print('<br><br>Download pdb at: http://biomlearn.uccs.edu:5001/download?ofname='+outFilePtr)
 
 import smtplib
 import os
@@ -249,12 +249,12 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 
-gmail_pass = ""
+gmail_pass = "mthgbrwzyhzkfvlc"
 user = "david.vadnaiscs@gmail.com"
 host = "smtp.gmail.com"
 port = 465
 
-to = "dvadnais@uccs.edu"
+to = emailAddr 
 subject = "ParticleChromo3D"
 emailBody = "\n\nAfter processing the file: " + inFilePtr +" The best Spearman correlation Dist vs. Reconstructed Dist found was : " + str(bestSpearm) \
   + ". The Best Pearson correlation Dist vs. Reconstructed Dist was : " + str(bestPearsonRHO) +".\n\n"
@@ -262,7 +262,7 @@ inputsEBody = "The parameters for this run were set to {ifname="+ inFilePtr + ",
   ", threshold="+str(threshold) +", randRange="+str(randRange)+"} "
 
 
-body = "Your ParticleChromo3D+ job completed.\n The results can be found at : " +": http://davidvadnais.com:5001/download?ofname="+outFilePtr + emailBody + inputsEBody
+body = "Your ParticleChromo3D+ job completed.\n The results can be found at : " +": http://biomlearn.uccs.edu:5001/download?ofname="+outFilePtr + emailBody + inputsEBody
 filename = "run.sh"
 
 

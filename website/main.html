@@ -16,7 +16,7 @@
 </div>
   <div style="width:75%; float: left; display: inline-block;">-->
         	<h1>ParticleChromo3D+</h1>
-        	<p>A Web based implementation of ParticleChromo3D for 3D chromosome structure reconstruction</p>
+        	<p>A Web Server for ParticleChromo3D Algorithm for 3D Chromosome Structure Reconstruction</p>
     <!--</div>-->
 
 </section>
@@ -29,7 +29,7 @@
 
 <p>ParticleChromo3D Parameters</p>
 Swarm Size: <input type="text" id="swarmSize" value="15"> Number of particles in system  <br><br>
-Iteration Count: <input type="text" id="itt" value="30000"> Maximum itterations before stop <br><br>
+Iteration Count: <input type="text" id="itt" value="30000"> Maximum iterations before stopping <br><br>
 Threshold: <input type="text" id="threshold" value="0.000001"> Error threshold before stopping <br><br>
 Random Range: <input type="text" id="randRange" value="1.0"> Range of x,y,z starting coords. Random value bewtween -randRange,randRange <br><br>
 Loss Function: <input type="text" id="lf" value="2"> 0 = SSE, 1 = MSE, 2 = RMSE, 3 = Huber <br><br>
@@ -38,15 +38,15 @@ Email Upon Completion (required): <input type="text" id="email" value=""><br><br
 
 
 <p>Upload Matrix (square matrix tab separated)</p>
-<!--<object type="text/html" data="http://davidvadnais.com:5001/form"></object>-->
+<!--<object type="text/html" data="http://biomlearn.uccs.edu:5001/form"></object>-->
 
-<form action = "http://davidvadnais.com:5001/upload" method = "POST" enctype = "multipart/form-data">
+<form action = "http://biomlearn.uccs.edu:5001/upload" method = "POST" enctype = "multipart/form-data">
         <input href="/" class="btn-bgstroke" type = "file" name = "file" />
         <input href="/" class="btn-bgstroke" type="submit" value="Upload">
 </form>
 <button  class="btn-bgstroke2" onclick="customSubmit()">Submit</button>
 
-<!--<a href="http://davidvadnais.com:5001/uploaded">See avalable pdbs</a>-->
+<!--<a href="http://biomlearn.uccs.edu:5001/uploaded">See avalable pdbs</a>-->
 
 
 <p>Example Interaction Frequency Matrix for 1MB GM12878 (Knight-Ruiz normalized)</p>
@@ -78,13 +78,13 @@ Email Upon Completion (required): <input type="text" id="email" value=""><br><br
 </select>
 
 
-<!--<a "davidvadnais.com:8080/success" class="btn-bgstroke"  onclick="myFunction()">Submit</a>-->
+<!--<a "biomlearn.uccs.edu:8080/success" class="btn-bgstroke"  onclick="myFunction()">Submit</a>-->
 <br>
 <button  class="btn-bgstroke2" onclick="myFunction()">Submit</button>
 <script>
 function myFunction() { 
 	window.open(
-                "http://davidvadnais.com:5001/process?ifname=" + document.getElementById("myText").value
+                "http://biomlearn.uccs.edu:5001/process?ifname=" + document.getElementById("myText").value
 		+ "&ss=" + document.getElementById("swarmSize").value
                 + "&itt=" +  document.getElementById("itt").value
                 + "&threshold=" +  document.getElementById("threshold").value
@@ -99,7 +99,7 @@ function myFunction() {
 
 function customSubmit() {
         window.open(
-                "http://davidvadnais.com:5001/process?ifname=uploaded_file"
+                "http://biomlearn.uccs.edu:5001/process?ifname=uploaded_file"
                 + "&ss=" + document.getElementById("swarmSize").value
                 + "&itt=" +  document.getElementById("itt").value
                 + "&threshold=" +  document.getElementById("threshold").value
