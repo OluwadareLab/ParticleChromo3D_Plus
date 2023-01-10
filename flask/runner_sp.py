@@ -46,7 +46,7 @@ def home():
     +  " -lf " + lf \
     +  " --outfile " + "out/"+outFile \
     +  " --email " + email \
-    + " /apt/repo/" + ifname
+    + " /apt/upload/" + ifname
   if (len(email) < 2):
     return "ERROR: Email required"
   else:

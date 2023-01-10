@@ -1,6 +1,6 @@
-<img align="left" src="logo.png">
+<img align="left" src="logo_1.png"  width="240" height="240" > 
 
-# ParticleChromo3D+: A Web-server implementation of ParticleChromo3D for 3D chromosome structure reconstruction
+# ParticleChromo3D+: a Web Server for ParticleChromo3D Algorithm for 3D Chromosome Structure Reconstruction
 ------------------------------------------------------------------------------------------------------------------------------------
 **OluwadareLab,**
 **University of Colorado, Colorado Springs**
@@ -25,6 +25,8 @@
 * configs: Python Dependencies <br />
 * exampleIfs: Synthetic and Real Hi-C datasets examples. <br />
 * flask: Source Code and utility's used.<br />
+* help: Example scripts to help a user get started with our webserver. <br />
+* results: Output structures generated for all the experiments performed. <br />
 * website: front end code
 
 **2.	Hi-C Data example data in this study:**
@@ -34,10 +36,25 @@ The GM12878 cell Hi-C dataset, GEO Accession number GSE63525, was downloaded fro
 **3.	Input matrix file format:**
 -----------------------------------------------------------
 
-Square Matrix Input format: The square matrix is a space seperated N by N intra-chromosomal contact matrix derived from Hi-C data, where N is the number of equal-sized regions of a chromosome.
+Square Matrix Input format: The square matrix is a space seperated N by N intra-chromosomal contact matrix derived from Hi-C data, where N is the number of regions of a chromosome.
 
 **4.	Dependencies Installation:**
 -----------------------------------------------------------
 
 Docker <br />
 
+**5. Usage - Docker**
+-----------------------------------------------------------
+### Base usage
+In the base folder [build](https://docs.docker.com/build/) the image with ```docker build -t particlechromo3D:latest .```
+
+Then [run](https://docs.docker.com/engine/reference/commandline/run/) the container with ```docker run -d --network="host" particlechromo3d:latest```
+
+### [Volumes](https://docs.docker.com/storage/volumes/) (Persisting Data)
+Working with volumes:
+* ```docker volume create ${VOLUME_NAME}```
+* ```docker volume inspect ${VOLUME_NAME}```
+* ```docker volume ls```
+* ```docker volume rm ${VOLUME_NAME}```
+
+* ```docker run -d --mount source=particlechromo3dmnt,target=/apt -p 5001:5001 -p 8080:8080 particlechromo3d:latest```
