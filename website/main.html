@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 
+
 <head>
+  <meta charset="UTF-8" />
   <link rel="stylesheet" href="main.css">
 </head>
 <body>
@@ -38,15 +40,20 @@ Email Upon Completion (required): <input type="text" id="email" value=""><br><br
 
 
 <p>Upload Matrix (square matrix tab separated)</p>
-<!--<object type="text/html" data="http://biomlearn.uccs.edu:5001/form"></object>-->
+
 
 <form action = "http://biomlearn.uccs.edu:5001/upload" method = "POST" enctype = "multipart/form-data">
         <input href="/" class="btn-bgstroke" type = "file" name = "file" />
         <input href="/" class="btn-bgstroke" type="submit" value="Upload">
 </form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<iframe id="myiframe" src="http://biomlearn.uccs.edu:5001/uploaded" style="height:450px;width:100%;" hidden></iframe>
+<button  class="btn-bgstroke" onclick="toggle(this);">Double click to show uploaded files</button>
+
+
 <button  class="btn-bgstroke2" onclick="customSubmit()">Submit</button>
 
-<!--<a href="http://biomlearn.uccs.edu:5001/uploaded">See avalable pdbs</a>-->
 
 
 <p>Example Interaction Frequency Matrix for 1MB GM12878 (Knight-Ruiz normalized)</p>
@@ -114,6 +121,20 @@ function customSubmit() {
 
 </script>
 
+<script>
+  let toggle = button => {
+    let element = document.getElementById("myiframe");
+    let hidden = element.getAttribute("hidden");
+    
+    if (hidden) {
+       element.removeAttribute("hidden");
+       button.innerText = "Hide Uploaded Files";
+    } else {
+       element.setAttribute("hidden", "hidden");
+       button.innerText = "Show Uploaded Files";
+    }
+  }
+</script>
 
 
 <!--<div style="text-align:center;width: 600px;margin: 0 auto;border-style: dotted;">

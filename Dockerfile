@@ -22,6 +22,7 @@ EXPOSE 8080
 RUN mkdir -p /apt/templates
 RUN mkdir /apt/repo/
 RUN mkdir /apt/out
+RUN mkdir /apt/upload
 
 #VOLUME /apt/upload
 

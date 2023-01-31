@@ -12,7 +12,7 @@ def make_tree(path):
                 tree['children'].append(dict(name=name))
     return tree
 
-from flask import Flask, render_template, jsonify , request, send_file
+from flask import Flask, render_template, jsonify , request, send_file, redirect
 import subprocess
 from werkzeug.utils import secure_filename
 import os
@@ -70,11 +70,12 @@ def upload():
     if request.method == 'POST':
         f = request.files['file']
         f.save("/apt/upload/"+secure_filename(f.filename))
+        return redirect("http://" + os.environ['HOSTNAME_BE'] +":8080/ParticleChromo3D/main.html", code=302)
         return "File saved successfully"
 
 @app.route('/uploaded')
 def dirtree():
-    path = '/apt/repo/'
+    path = '/apt/upload/'
     return render_template('dirtree.html', tree=make_tree(path))
 
 @app.route('/download')
