@@ -7,28 +7,39 @@ a{
 }
 
 h1 {
-  font-size: 2.8em;
-//  padding: 5px 0;
-  font-weight: 800;
+  font-size: 200%;
+  font-weight: 800%;
 }
 
 p {
-  font-size: 1.1em;
-  font-weight: 1000;
+  font-size: 150%;
+  font-weight: 1000%;
   letter-spacing: 1px;
   font-family: Tahoma, Verdana, sans-serif;
 }
+
+body {
+  background-color: white;
+  font-family:  Tahoma, Verdana, sans-serif;
+  text-align: center;
+  padding: 40px 0;
+}
+
 
 .header {
    position: fixed;
    top: 0;
    width: 100%;
-   height: 150px;   /* Height of the footer */
+   height: 15%;   /* Height of the header */
   text-align: center;
   background: silver;
   color: black;
+  overflow: hidden;
+  white-space: nowrap;
 
 }
+
+
 .footer {
    position: fixed;
    bottom: 0;
@@ -77,9 +88,3 @@ p {
   text-align: center;
 }
 
-body {
-  background-color: white;
-  font-family:  Tahoma, Verdana, sans-serif;
-  text-align: center;
-  padding: 40px 0;
-}
