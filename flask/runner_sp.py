@@ -24,7 +24,7 @@ app = Flask(__name__)
 @app.route("/process")
 def home():
   # args
-  ifname = request.args.get('ifname', type=str)
+  ifname = "/apt/repo/"+request.args.get('ifname', type=str)
   ss = request.args.get('ss', type=str)
   itt = request.args.get('itt', type=str)
   threshold = request.args.get('threshold', type=str)
@@ -34,8 +34,8 @@ def home():
   email = request.args.get('email', type=str)
   # Custom upload
   if (ifname == "uploaded_file"):
-    list_of_files = glob.glob('/apt/repo/*')
-    ifname = os.path.basename(max(list_of_files, key=os.path.getctime))
+    list_of_files = glob.glob('/apt/upload/*')
+    ifname = "/apt/upload/" +os.path.basename(max(list_of_files, key=os.path.getctime))
 
  
   # cmd
@@ -46,14 +46,14 @@ def home():
     +  " -lf " + lf \
     +  " --outfile " + "out/"+outFile \
     +  " --email " + email \
-    + " /apt/upload/" + ifname
+    +  " " + ifname
   if (len(email) < 2):
     return "ERROR: Email required"
   else:
     p = subprocess.Popen(thecmd, shell=True, stdout=subprocess.PIPE, 
                      stderr=subprocess.PIPE)
-    return "Processing has begun. You will recieve an email upon its completion."  
-    #return subprocess.check_output(thecmd, shell=True) 
+    #return "Processing has begun. You will recieve an email upon its completion."  
+    return subprocess.check_output(thecmd, shell=True) 
   #return subprocess.check_output("python3 Ps.py chr23_matrix.txt", shell=True) 
 
 @app.route("/neo")
