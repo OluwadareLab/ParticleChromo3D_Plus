@@ -1,5 +1,5 @@
 requests==2.27.1
 Biopython==1.78
 scipy
-numpy==1.23.1
+numpy==1.23.1 #https://stackoverflow.com/questions/74893742/how-to-solve-attributeerror-module-numpy-has-no-attribute-bool
 secure-smtplib
