@@ -33,7 +33,7 @@ def home():
   outFile = request.args.get('outFile', type=str)
   email = request.args.get('email', type=str)
   # Custom upload
-  if (ifname == "uploaded_file"):
+  if (ifname == "/apt/repo/uploaded_file"):
     list_of_files = glob.glob('/apt/upload/*')
     ifname = "/apt/upload/" + os.path.basename(max(list_of_files, key=os.path.getctime))
 
@@ -69,12 +69,12 @@ def form():
 def upload():
     if request.method == 'POST':
         f = request.files['file']
-        f.save("//apt//repo//"+secure_filename(f.filename))
+        f.save("/apt/upload/"+secure_filename(f.filename))
         return "File saved successfully"
 
 @app.route('/uploaded')
 def dirtree():
-    path = '//apt//repo//'
+    path = '/apt/repo/'
     return render_template('dirtree.html', tree=make_tree(path))
 
 @app.route('/download')
