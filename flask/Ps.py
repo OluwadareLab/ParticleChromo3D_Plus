@@ -237,8 +237,10 @@ print("Best Pearson correlation Dist vs. Reconstructed Dist: ", bestPearsonRHO)
 Write_Log(outFilePtr +".log", inFilePtr, bestAlpha, bestCost, bestSpearm, bestPearsonRHO)
 
 #'<br><br>neo4j by first going to https://biomlearn.uccs.edu:5000/neo and then https://biomlearn.uccs.edu:7474/browser/')
-print('<br><br>Download pdb at: http://biomlearn.uccs.edu:5001/download?ofname='+outFilePtr)
+print('<br><br>Download pdb at: http://' + os.environ['HOSTNAME_BE'] + ':5001/download?ofname='+outFilePtr)
 
+
+############################## email section
 import smtplib
 import os
 
@@ -249,8 +251,8 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 
-gmail_pass = "mthgbrwzyhzkfvlc"
-user = "david.vadnaiscs@gmail.com"
+gmail_pass = os.environ['SERVICE_EMAIL_KEY'] 
+user = os.environ['SERVICE_EMAIL']
 host = "smtp.gmail.com"
 port = 465
 
