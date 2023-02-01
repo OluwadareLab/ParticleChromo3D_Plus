@@ -24,15 +24,21 @@ from email.message import EmailMessage
 
 
 def lossFunction(tar,b):
-    #newCost = np.sqrt( (1/b) * np.sum( (tar)**2, axis=1 ) )
-    #newCost = np.sum( (b-tar)**2)#SSE
-    newCost = np.sqrt(np.sum( (b-tar)**2))#RMSE
-    
-    #Heuber
-    #delta = 1.0
-    #y = tar
-    #yHat = b
-    #newCost = np.sum(np.where(np.abs(y-yHat) < delta,.5*(y-yHat)**2 , delta*(np.abs(y-yHat)-0.5*delta)))
+    if (lossFunctionChoice == 2):
+        newCost = np.sqrt(np.sum( (b-tar)**2))#RMSE
+    elif (lossFunctionChoice == 0):
+        newCost = np.sum( (b-tar)**2)#SSE
+    elif (lossFunctionChouce == 1):
+            newCost = np.sqrt( (1/b) * np.sum( (tar)**2, axis=1 ) )
+    elif (lossFunctionChoice == 3):
+        #Heuber
+        delta = 1.0
+        y = tar
+        yHat = b
+        newCost = np.sum(np.where(np.abs(y-yHat) < delta,.5*(y-yHat)**2 , delta*(np.abs(y-yHat)-0.5*delta)))
+    else:
+        newCost = np.sqrt(np.sum( (b-tar)**2))#RMSE
+
     
     return newCost
 
@@ -167,7 +173,7 @@ parser.add_argument("-t","--threshold", help="Error threshold before stoping [De
 parser.add_argument("-rr","--randRange", help="Range of x,y,z starting coords. Random value bewtween -randRange,randRange [Default 1]", type=float, default=1.0)
 parser.add_argument("-o","--outfile", help="Filename of the output pdb model  [Default ./chr.pdb]", type=str, default="./out/chr.pdb")
 parser.add_argument("-e","--email", help="Email to message [Default NULL]", type=str, default="NULL")
-parser.add_argument("-lf","--lossFunction", help="Email to message [Default NULL]", type=str, default="NULL")
+parser.add_argument("-lf","--lossFunction", help="Email to message [Default NULL]", type=str, default="2")
 
 
 
@@ -189,6 +195,8 @@ if args.randRange:
     randRange = args.randRange
 if args.email:
     emailAddr = args.email
+if args.lossFunction:
+    lossFunctionChoice = int(args.lossFunction)
 
  
 if len(rangeSpace) == 0:

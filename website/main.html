@@ -34,7 +34,13 @@ Swarm Size: <input type="text" id="swarmSize" value="15"> Number of particles in
 Iteration Count: <input type="text" id="itt" value="30000"> Maximum iterations before stopping <br><br>
 Threshold: <input type="text" id="threshold" value="0.000001"> Error threshold before stopping <br><br>
 Random Range: <input type="text" id="randRange" value="1.0"> Range of x,y,z starting coords. Random value bewtween -randRange,randRange <br><br>
-Loss Function: <input type="text" id="lf" value="2"> 0 = SSE, 1 = MSE, 2 = RMSE, 3 = Huber <br><br>
+Loss Function:
+<select name="loss" id="lf">
+  <option value="2">RMSE</option>
+  <option value="1">MSE</option>
+  <option value="0">SSE<option>
+  <option value="3">Huber</option>
+</select><br><br>
 Out File Name: <input type="text" id="outFile" value="chr.pdb"> Filename of the output pdb model <br><br>
 Email Upon Completion (required): <input type="text" id="email" value=""><br><br>
 
