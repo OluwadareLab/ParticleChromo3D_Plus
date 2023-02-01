@@ -59,4 +59,4 @@ Working with volumes:
 * ```docker volume ls```
 * ```docker volume rm ${VOLUME_NAME}```
 
-* ```docker run -d --mount source=particlechromo3dmnt,target=/apt -p 5001:5001 -p 8080:8080 particlechromo3d:latest```
+* ```docker run -d -p 5001:5001 -p 8080:8080  -e SERVICE_EMAIL=${YOUR_SVC_EMAIL} -e HOSTNAME_BE=${YOUR_URL} -e SERVICE_EMAIL_KEY=${KEY} particlechromo3d:latest```
