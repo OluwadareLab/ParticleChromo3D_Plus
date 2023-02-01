@@ -7,7 +7,7 @@
 
 ----------------------------------------------------------------------
 **Build Status** <br />
-[![Build Status](https://github.com/OluwadareLab/ParticleChromo3D_Plus/workflows/Docker%20Image%20CI/badge.svg?branch=master)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions?query=branch=master)
+[![Build Status](https://github.com/OluwadareLab/ParticleChromo3D_Plus/workflows/Docker%20Image%20CI/badge.svg?branch=main)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions?query=branch%3Amain)
 
 **Developers:** <br />
 		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;David Vadnais<br />
