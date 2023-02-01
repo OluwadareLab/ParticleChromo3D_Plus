@@ -28,8 +28,8 @@ def lossFunction(tar,b):
         newCost = np.sqrt(np.sum( (b-tar)**2))#RMSE
     elif (lossFunctionChoice == 0):
         newCost = np.sum( (b-tar)**2)#SSE
-    elif (lossFunctionChouce == 1):
-            newCost = np.sqrt( (1/b) * np.sum( (tar)**2, axis=1 ) )
+    elif (lossFunctionChoice == 1):
+            newCost =np.square(np.subtract(b,tar)).mean()
     elif (lossFunctionChoice == 3):
         #Heuber
         delta = 1.0
