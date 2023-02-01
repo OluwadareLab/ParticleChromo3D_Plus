@@ -16,3 +16,6 @@ curl -X GET http://biomlearn.uccs.edu:5001/uploaded
 
 # Download specific file
 curl -X GET "biomlearn.uccs.edu:5001/download?ofname=${filename}"
+
+# Convert a sparse matrix to a square matrix
+curl -X GET "biomlearn.uccs.edu:5001/convert?filename=${filename}"
