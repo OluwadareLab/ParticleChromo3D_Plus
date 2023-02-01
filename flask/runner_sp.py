@@ -101,5 +101,17 @@ def download_file():
     path = "/apt/" + ofname + ".pdb"
     return send_file(path, as_attachment=True)
 
+@app.route('/convert')
+def convert():
+  iffname = request.args.get('filename', type=str)
+  path = "//apt//upload//" + iffname
+  thecmd = "python3 TransformVCM.py " + path
+  p = subprocess.Popen(thecmd, shell=True, stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
+
+  path2="/apt/convert.out"
+  return send_file(path2, as_attachment=True)
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port = 5001,debug=True)
