@@ -6,6 +6,9 @@
 **University of Colorado, Colorado Springs**
 
 ----------------------------------------------------------------------
+**Build Status** <br />
+[![Build Status](https://github.com/OluwadareLab/ParticleChromo3D_Plus/workflows/build/badge.svg?branch=master)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions?query=branch%3Amaster)
+
 **Developers:** <br />
 		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;David Vadnais<br />
 		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Department of Computer Science <br />
