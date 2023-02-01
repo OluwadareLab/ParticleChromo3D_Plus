@@ -51,9 +51,17 @@ Docker <br />
 **5. Usage - Docker**
 -----------------------------------------------------------
 ### Base usage
+* Download latest image
+	* Via the [GitHub web interface](https://docs.github.com/en/actions/managing-workflow-runs/downloading-workflow-artifacts) here: https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions
+* Load the image with
+	* ```docker image load -i particlechromo3d_image.tar.gz```
+* [Run](https://docs.docker.com/engine/reference/commandline/run/) the container with
+	* ```docker run -d -p 5001:5001 -p 8080:8080  -e SERVICE_EMAIL=${YOUR_SVC_EMAIL} -e HOSTNAME_BE=${YOUR_URL} -e SERVICE_EMAIL_KEY=${KEY} particlechromo3d:latest```
+
+### Build/extend the image
 In the base folder [build](https://docs.docker.com/build/) the image with ```docker build -t particlechromo3D:latest .```
 
-Then [run](https://docs.docker.com/engine/reference/commandline/run/) the container with ```docker run -d --network="host" particlechromo3d:latest```
+Then [run](https://docs.docker.com/engine/reference/commandline/run/) the container with ```docker run -d -p 5001:5001 -p 8080:8080  -e SERVICE_EMAIL=${YOUR_SVC_EMAIL} -e HOSTNAME_BE=${YOUR_URL} -e SERVICE_EMAIL_KEY=${KEY} particlechromo3d:latest```
 
 ### [Volumes](https://docs.docker.com/storage/volumes/) (Persisting Data)
 Working with volumes:
