@@ -1,3 +1,17 @@
+
+## imports
+from flask import Flask, render_template, jsonify , request, send_file, redirect
+import subprocess
+from werkzeug.utils import secure_filename
+import os
+
+import re
+import glob
+
+# constants
+regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+
+# Non flask functions
 def make_tree(path):
     tree = dict(name=os.path.basename(path), children=[])
     try: lst = os.listdir(path)
@@ -12,13 +26,15 @@ def make_tree(path):
                 tree['children'].append(dict(name=name))
     return tree
 
-from flask import Flask, render_template, jsonify , request, send_file, redirect
-import subprocess
-from werkzeug.utils import secure_filename
-import os
+# https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
+def check(email):
+ 
+    # pass the regular expression
+    # and the string into the fullmatch() method
+    return re.fullmatch(regex, email)
+        
 
-import glob
-
+## Flask
 app = Flask(__name__)
 
 @app.route("/process")
@@ -47,8 +63,8 @@ def home():
     +  " --outfile " + "out/"+outFile \
     +  " --email " + email \
     +  " " + ifname
-  if (len(email) < 2):
-    return "ERROR: Email required"
+  if (not check(email)):
+    return "ERROR: Valid Email Required <br> Use back to return home"
   else:
     p = subprocess.Popen(thecmd, shell=True, stdout=subprocess.PIPE, 
                      stderr=subprocess.PIPE)
