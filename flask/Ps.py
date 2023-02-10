@@ -32,10 +32,10 @@ def lossFunction(tar,b):
             newCost =np.square(np.subtract(b,tar)).mean()
     elif (lossFunctionChoice == 3):
         #Heuber
-        delta = 1.0
+        alpha = 0.5
         y = tar
         yHat = b
-        newCost = np.sum(np.where(np.abs(y-yHat) < delta,.5*(y-yHat)**2 , delta*(np.abs(y-yHat)-0.5*delta)))
+        newCost = np.sum(np.where(np.abs(y-yHat) < alpha,.5*(y-yHat)**2 , alpha*(np.abs(y-yHat)-0.5*alpha)))
     else:
         newCost = np.sqrt(np.sum( (b-tar)**2))#RMSE
 
