@@ -39,7 +39,7 @@ The GM12878 cell Hi-C dataset, GEO Accession number GSE63525, was downloaded fro
 **3.	Input matrix file format:**
 -----------------------------------------------------------
 
-Square Matrix Input format: The square matrix is a space seperated N by N intra-chromosomal contact matrix derived from Hi-C data, where N is the number of regions of a chromosome.
+Square Matrix Input format: The square matrix is a tab seperated N by N intra-chromosomal contact matrix derived from Hi-C data, where N is the number of regions of a chromosome.
 <br><br>
 Or convert using the convert endpoint after uploading the Sparse Matrix as a TSV (three-column) file format.
 
