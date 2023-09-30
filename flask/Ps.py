@@ -6,6 +6,7 @@ import copy
 import time
 import argparse
 import os
+import logging
 
 import numpy as np
 from scipy import stats
@@ -21,6 +22,10 @@ import smtplib
 import uuid
 
 from email.message import EmailMessage
+
+
+# Initialize logger
+log = logging.getLogger(__name__)
 
 
 def lossFunction(tar,b):
@@ -237,20 +242,21 @@ bestAlpha = theAlphas[outputOfSwarm[4]]
 bestPearsonRHO = outputOfSwarm[0]
 
     
-print("Input file: ", inFilePtr)
+print(f"Input file: {inFilePtr}")
 print("Convert factor:: ",bestAlpha)
 print("SSE at best spearman : ", bestCost)    
 print("Best Spearman correlation Dist vs. Reconstructed Dist  : ", bestSpearm) 
 print("Best Pearson correlation Dist vs. Reconstructed Dist: ", bestPearsonRHO) 
 Write_Log(outFilePtr +".log", inFilePtr, bestAlpha, bestCost, bestSpearm, bestPearsonRHO)
 
-#'<br><br>neo4j by first going to https://biomlearn.uccs.edu:5000/neo and then https://biomlearn.uccs.edu:7474/browser/')
-print('<br><br>Download pdb at: http://' + os.environ['HOSTNAME_BE'] + ':5001/download?ofname='+outFilePtr)
+
+if 'HOSTNAME_BE' in os.environ:
+    #'<br><br>neo4j by first going to https://biomlearn.uccs.edu:5000/neo and then https://biomlearn.uccs.edu:7474/browser/')
+    print('<br><br>Download pdb at: http://' + os.environ['HOSTNAME_BE'] + ':5001/download?ofname='+outFilePtr)
 
 
 ############################## email section
 import smtplib
-import os
 
 from email.message import EmailMessage
 from email.mime.application import MIMEApplication
@@ -258,6 +264,10 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
+
+if not 'SERVICE_EMAIL_KEY' in os.environ or not 'SERVICE_EMAIL' in os.environ:
+    log.warning("Missing email properties in PS.py")
+    sys.exit(0)
 
 gmail_pass = os.environ['SERVICE_EMAIL_KEY'] 
 user = os.environ['SERVICE_EMAIL']

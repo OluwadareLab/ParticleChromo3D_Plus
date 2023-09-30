@@ -4,6 +4,8 @@ from Bio import PDB
 from scipy.spatial import procrustes
 
 from collections.abc import Iterable
+from pathlib import Path
+
 
 import numpy as np
 import copy
@@ -121,6 +123,8 @@ def Proc_PDB(inputPtr, comparePtr):
 '''SOURCE: https://github.com/mbglab/EVR'''
 def WritePDB(positions, pdb_file, ctype = "0"):
     '''Save the result as a .pdb file'''
+    Path("./out").mkdir(exist_ok=True) # Create out dir if it doesnt exist
+
     o_file = open(pdb_file, "w")
     o_file.write("\n")
 

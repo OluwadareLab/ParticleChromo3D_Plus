@@ -46,8 +46,11 @@ Or convert using the convert endpoint after uploading the Sparse Matrix as a TSV
 
 **4.	Dependencies Installation:**
 -----------------------------------------------------------
-
+### With Docker
 Docker <br />
+
+### Without Docker
+See config/requirements.txt
 
 **5. Usage - Docker**
 -----------------------------------------------------------
@@ -60,7 +63,7 @@ Docker <br />
 	* ```docker run -d -p 5001:5001 -p 8080:8080  -e SERVICE_EMAIL=${YOUR_SVC_EMAIL} -e HOSTNAME_BE=${YOUR_URL} -e SERVICE_EMAIL_KEY=${KEY} particlechromo3d:latest```
 
 ### Build/extend the image
-In the base folder [build](https://docs.docker.com/build/) the image with ```docker build -t particlechromo3D:latest .```
+In the base folder [build](https://docs.docker.com/build/) the image with ```docker build -t particlechromo3d:latest .```
 
 Then [run](https://docs.docker.com/engine/reference/commandline/run/) the container with ```docker run -d -p 5001:5001 -p 8080:8080  -e SERVICE_EMAIL=${YOUR_SVC_EMAIL} -e HOSTNAME_BE=${YOUR_URL} -e SERVICE_EMAIL_KEY=${KEY} particlechromo3d:latest```
 
@@ -72,3 +75,17 @@ Working with volumes:
 * ```docker volume rm ${VOLUME_NAME}```
 
 * ```docker run -d -p 5001:5001 -p 8080:8080  -e SERVICE_EMAIL=${YOUR_SVC_EMAIL} -e HOSTNAME_BE=${YOUR_URL} -e SERVICE_EMAIL_KEY=${KEY} particlechromo3d:latest```
+
+**7. Usage - Direct:**
+-----------------------------------------------------------
+In lieu of using docker flask/Ps.py can be run directly through:
+* ```python Ps.py ${INPUT_MATRIX}```
+
+Use ```python Ps.py --help``` to find out more about the run options.
+
+**8.	Publication:**
+-----------------------------------------------------------
+
+Vadnais, David, and Oluwatosin Oluwadare. "ParticleChromo3D+: A Web Server for ParticleChromo3D Algorithm for 3D Chromosome Structure Reconstruction." Current Issues in Molecular Biology 45.3 (2023): 2549-2560.
+
+Vadnais, D., Middleton, M. & Oluwadare, O. ParticleChromo3D: a Particle Swarm Optimization algorithm for chromosome 3D structure prediction from Hi-C data. BioData Mining 15, 19 (2022). https://doi.org/10.1186/s13040-022-00305-x
