@@ -89,8 +89,8 @@ class Swarm:
         temp = copy.copy(copyPos)
 
         # random boolean mask for which values will be changed
-        falseVal = np.zeros(cutSize).astype(np.bool)
-        trueVal = np.ones(temp.shape[0]-cutSize).astype(np.bool)
+        falseVal = np.zeros(cutSize).astype(bool)
+        trueVal = np.ones(temp.shape[0]-cutSize).astype(bool)
 
         randBool = np.append(falseVal, trueVal)
         np.random.shuffle(randBool)
