@@ -191,4 +191,3 @@ def Write_Log(outfile, inFile, bestAlpha, rmse, bestSpearmanRHO,bestPearsonRHO):
     FILE.write(inString)
     FILE.close()
     
-    

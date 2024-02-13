@@ -83,7 +83,7 @@ In lieu of using docker flask/Ps.py can be run directly through:
 
 Use ```python Ps.py --help``` to find out more about the run options.
 
-**8.	Publication:**
+**8.	Publications:**
 -----------------------------------------------------------
 
 Vadnais, David, and Oluwatosin Oluwadare. "ParticleChromo3D+: A Web Server for ParticleChromo3D Algorithm for 3D Chromosome Structure Reconstruction." Current Issues in Molecular Biology 45.3 (2023): 2549-2560.

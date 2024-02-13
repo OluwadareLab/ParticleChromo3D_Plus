@@ -23,9 +23,13 @@ from email.header import Header
 
 
 # Initialize logger
-log = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+logger = logging.getLogger(__name__)
 
 
+# Functions
 def lossFunction(tar,b):
     if (lossFunctionChoice == 2):
         newCost = np.sqrt(np.sum( (b-tar)**2))#RMSE
@@ -53,7 +57,7 @@ def Print_Stats(swarm, contact, pointCount, i, outFilePtr, convFact):
 
     error = np.sqrt( (1/pointCount) * np.sum( (swarm.gBest[2]-contact[:,3])**2 ) )
 
-    log.debug('id: ' + str(swarm.id) + 
+    logger.debug('id: ' + str(swarm.id) + 
         ' itt: ' + str(i) + 
         ' Cost: ' + str(swarm.gBest[1]) + 
         ' Pearson: ' + str(pers[0]) + 
@@ -73,8 +77,7 @@ def One_Move(ittCount, swarm, contact, pointCount, threshold,  outFilePtr, convF
     
     for i in range(ittCount):
         if (i%1000 == 0) and (swarm.gBest is not None):
-            #error = np.sqrt( (1/pointCount) * np.sum( (swarm.gBest[2]-contact[:,3])**2 ) )
-            error = lossFunction(contact[:,3],swarm.gBest[2])#np.sum( (swarm.gBest[2]-contact[:,3])**2 )
+            error = lossFunction(contact[:,3],swarm.gBest[2])
             Print_Stats(swarm, contact, pointCount, i, outFilePtr, convFact)        
             
             if (np.abs(saveGBestCost - error)) >= threshold:
@@ -137,7 +140,7 @@ def Par_Choice(inFilePtr, outFilePtr, alpha):
     else:
         bestSwarm = Optimize( inFilePtr, outFilePtr, alpha)
     contact = np.insert(contact,3, 1.0 / (contact[:,2]**bestAlpha) ,axis=1)
-    log.info(bestSwarm)
+    logger.info(bestSwarm)
     Write_Stats(swarmForPDB, contact, outFilePtr)
 
     return bestSwarm
@@ -146,7 +149,7 @@ def Full_List( inputFilePtr, outFilePtr , alpha):
     convStore = []
     
     convStore.append(Par_Choice( inputFilePtr, outFilePtr, alpha))
-    log.info(f"Pearson: {convStore[0][0]} Spearman: {convStore[0][1]} rmse: {convStore[0][2]}")
+    logger.info(f"Pearson: {convStore[0][0]} Spearman: {convStore[0][1]} rmse: {convStore[0][2]}")
 
     #Helper.Write_List(convStore, outFilePtr)
     return convStore
@@ -170,6 +173,8 @@ parser.add_argument("-rr","--randRange", help="Range of x,y,z starting coords. R
 parser.add_argument("-o","--outfile", help="Filename of the output pdb model  [Default ./chr.pdb]", type=str, default="./out/chr.pdb")
 parser.add_argument("-e","--email", help="Email to message [Default NULL]", type=str, default="NULL")
 parser.add_argument("-lf","--lossFunction", help="Email to message [Default NULL]", type=str, default="2")
+parser.add_argument("-ll","--logLevel", help="[DEBUG,INFO,WARNING,ERROR]", type=str, default="WARNING")
+
 
 args = parser.parse_args()
 
@@ -191,6 +196,9 @@ if args.email:
     emailAddr = args.email
 if args.lossFunction:
     lossFunctionChoice = int(args.lossFunction)
+if args.logLevel:
+    logger.setLevel(logging.getLevelName(args.logLevel.upper()))
+    logger.debug(f"Log level set to: {logging.getLevelName(args.logLevel)}")
 
  
 if len(rangeSpace) == 0:
@@ -221,9 +229,9 @@ theAlphas = np.array(range(int(theseAlphas[0]),int(theseAlphas[1]),int(theseAlph
 if outFilePtr == "noIn":
     outFilePtr = os.path.basename(os.path.basename(inFilePtr) + str(uuid.uuid4()))
     outFilePtr = os.path.splitext(outFilePtr)[0]
-    log.info(outFilePtr)
+    logger.info(outFilePtr)
 outputOfSwarm = Full_List( inFilePtr + ".stripped", outFilePtr, theseAlphas)[0]
-log.info(outputOfSwarm)
+logger.info(outputOfSwarm)
 
 bestSpearm = outputOfSwarm[1]
 bestCost = outputOfSwarm[2]
@@ -246,7 +254,7 @@ if 'HOSTNAME_BE' in os.environ:
 
 ############################## email section
 if 'SERVICE_EMAIL_KEY' not in os.environ or 'SERVICE_EMAIL' not in os.environ:
-    log.warning("Missing email properties in Ps.py")
+    logger.warning("Missing email properties in Ps.py")
     sys.exit(0)
 
 gmail_pass = os.environ['SERVICE_EMAIL_KEY'] 
