@@ -16,7 +16,7 @@ RUN mkdir webapps/ParticleChromo3D
 COPY website/* /usr/local/tomcat/webapps/ParticleChromo3D/
 
 
-EXPOSE 8080
+EXPOSE 8080 5000
 
 # backend
 RUN mkdir -p /apt/templates
@@ -34,9 +34,7 @@ RUN mv /apt/*.html /apt/templates/
 
 RUN pip install -r /apt/requirements.txt
 
-RUN pip install flask
-
-EXPOSE 5000
+RUN pip install flask 
 
 # activate
 COPY run.sh .

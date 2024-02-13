@@ -2,6 +2,10 @@ import numpy as np
 import csv
 import sys
 
+'''
+Converts 3 column matrix into square matrix 
+'''
+
 def squarify(mat):
     
     maxBin = 0
@@ -35,7 +39,6 @@ squareMat = squarify(threeMat)
 with open('convert.out', 'w', newline='') as tsvfile:
     writer = csv.writer(tsvfile, delimiter='\t', lineterminator='\n')
     for row in squareMat:
-
         writer.writerow(row)
 
 exit(0)

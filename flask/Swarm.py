@@ -1,8 +1,6 @@
-import Helper
 import copy
 
 import numpy as np
-
 from scipy.spatial import distance
 
 
@@ -14,7 +12,7 @@ from scipy.spatial import distance
     Swarms are in a cluster format as this allows python to do vector math on the swarm array which is MANY times more efficient
     than doing individual objects of swarms
     
-    Developer: 
+    Developers: 
     David Vadnais dvadnais@uccs.edu
     DMichael Middleton mmiddlet@uccs.edu 12/4/2020
 
@@ -118,7 +116,7 @@ class Swarm:
         self.posBest[tmpMsk] = copy.copy(self.pos)[tmpMsk]
         self.costBest[tmpMsk] = self.cost[tmpMsk]
 
-        currentBest = np.argmin(self.cost);
+        currentBest = np.argmin(self.cost)
 
         if (self.gBest is None) or (self.cost[currentBest] < self.gBest[1]):
             self.gBest = (copy.copy(self.pos[currentBest]),copy.copy(self.cost[currentBest][0]), copy.copy(self.dist[currentBest]))

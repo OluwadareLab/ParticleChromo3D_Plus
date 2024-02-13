@@ -2,8 +2,6 @@ from Swarm import Swarm
 import Helper
 
 import sys
-import copy
-import time
 import argparse
 import os
 import logging
@@ -11,8 +9,7 @@ import logging
 import numpy as np
 from scipy import stats
 
-from multiprocessing import Pool
-from multiprocessing import cpu_count
+from multiprocessing import Pool, cpu_count
 from itertools import repeat
 
 from Helper import Write_Log
@@ -20,8 +17,9 @@ from Helper import Write_Log
 #for email
 import smtplib
 import uuid
-
-from email.message import EmailMessage
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.header import Header
 
 
 # Initialize logger
@@ -55,14 +53,14 @@ def Print_Stats(swarm, contact, pointCount, i, outFilePtr, convFact):
 
     error = np.sqrt( (1/pointCount) * np.sum( (swarm.gBest[2]-contact[:,3])**2 ) )
 
-    '''print('id: ' + str(swarm.id) + 
+    log.debug('id: ' + str(swarm.id) + 
         ' itt: ' + str(i) + 
         ' Cost: ' + str(swarm.gBest[1]) + 
         ' Pearson: ' + str(pers[0]) + 
         ' Spearmen: ' + str(spear[0]) +
         ' IFSpear: ' + str(spearIF[0]) +
-        ' error: ' + str(error))'''
-    thisOutFilePtr = 'outputFolder/'+outFilePtr +str(convFact)
+        ' error: ' + str(error))
+    thisOutFilePtr = 'outputFolder/' + outFilePtr + str(convFact)
     
 
 def Write_Stats(swarm, contact, outFilePtr):
@@ -72,23 +70,19 @@ def Write_Stats(swarm, contact, outFilePtr):
 def One_Move(ittCount, swarm, contact, pointCount, threshold,  outFilePtr, convFact):
     saveGBestCost = float('inf')
     totTime = 0
-
-
+    
     for i in range(ittCount):
         if (i%1000 == 0) and (swarm.gBest is not None):
             #error = np.sqrt( (1/pointCount) * np.sum( (swarm.gBest[2]-contact[:,3])**2 ) )
             error = lossFunction(contact[:,3],swarm.gBest[2])#np.sum( (swarm.gBest[2]-contact[:,3])**2 )
-            Print_Stats(swarm, contact, pointCount, i, outFilePtr, convFact)
+            Print_Stats(swarm, contact, pointCount, i, outFilePtr, convFact)        
             
-                
-
             if (np.abs(saveGBestCost - error)) >= threshold:
                 saveGBestCost = error
             else:
                 return i, totTime
 
         operation(i, swarm)
-
 
     return i
 
@@ -110,7 +104,8 @@ def Optimize(inFilePtr, outFilePtr, convFact,constraint,points,zeroInd):
                     stats.spearmanr(swarm.gBest[2], constraint[:,3])[0], 
                     lossFunction(constraint[:,3],swarm.gBest[2]),
                     ittFin,
-                     swarm.id, swarm)
+                    swarm.id, 
+                    swarm)
 
 # Runs in paralel if passed multiple rangeSpace
 def Par_Choice(inFilePtr, outFilePtr, alpha):
@@ -142,7 +137,7 @@ def Par_Choice(inFilePtr, outFilePtr, alpha):
     else:
         bestSwarm = Optimize( inFilePtr, outFilePtr, alpha)
     contact = np.insert(contact,3, 1.0 / (contact[:,2]**bestAlpha) ,axis=1)
-    print(bestSwarm)
+    log.info(bestSwarm)
     Write_Stats(swarmForPDB, contact, outFilePtr)
 
     return bestSwarm
@@ -151,8 +146,7 @@ def Full_List( inputFilePtr, outFilePtr , alpha):
     convStore = []
     
     convStore.append(Par_Choice( inputFilePtr, outFilePtr, alpha))
-    print("pearson:" + str(convStore[0][0]) + " spearman:"+
-          str(convStore[0][1]) + " rmse:" + str(convStore[0][2]))
+    log.info(f"Pearson: {convStore[0][0]} Spearman: {convStore[0][1]} rmse: {convStore[0][2]}")
 
     #Helper.Write_List(convStore, outFilePtr)
     return convStore
@@ -161,12 +155,9 @@ sys.setrecursionlimit(10000)
 if cpu_count() <= 2:
     PROC_COUNT = cpu_count()
 else :
-    PROC_COUNT = cpu_count()-1#attempt to reduce thrashing.
-
-
+    PROC_COUNT = cpu_count()-1 # attempt to reduce thrashing.
 
 rangeSpace = [] # Max scaling factor. Needs to be optimized for each specific dataset. Use two values [one, two] to multithread through a range of those two values at a interval of 5000
-
 
 # Arguments for running program
 # python3 ParticleChromo3D.py <input_data> <other_parameter>
@@ -179,8 +170,6 @@ parser.add_argument("-rr","--randRange", help="Range of x,y,z starting coords. R
 parser.add_argument("-o","--outfile", help="Filename of the output pdb model  [Default ./chr.pdb]", type=str, default="./out/chr.pdb")
 parser.add_argument("-e","--email", help="Email to message [Default NULL]", type=str, default="NULL")
 parser.add_argument("-lf","--lossFunction", help="Email to message [Default NULL]", type=str, default="2")
-
-
 
 args = parser.parse_args()
 
@@ -210,14 +199,14 @@ if len(rangeSpace) == 0:
 if len(rangeSpace) > 2 and (rangeSpace[0] == rangeSpace[1]):
     rangeSpace.pop()   
 
-print(inFilePtr)
+print(f"The input file is : {inFilePtr}")
 
 fout = inFilePtr + ".stripped"
 clean_lines = []
 f= open(inFilePtr, "r")
 lines = f.readlines()
-for l in lines:
-    res = str(" ".join(l.split()))
+for line in lines:
+    res = str(" ".join(line.split()))
     clean_lines.append(res)
 f.close()
 
@@ -227,27 +216,27 @@ f.close()
 
 
 theseAlphas = np.array([0.1, 2.0, 0.1])*100
-theAlphas = np.array(range(int(theseAlphas[0]),int(theseAlphas[1]),int(theseAlphas[2])))/100
+theAlphas = np.array(range(int(theseAlphas[0]),int(theseAlphas[1]),int(theseAlphas[2]))) / 100
 
 if outFilePtr == "noIn":
-    outFilePtr =  os.path.basename(os.path.basename(inFilePtr) + str(uuid.uuid4()) )
+    outFilePtr = os.path.basename(os.path.basename(inFilePtr) + str(uuid.uuid4()))
     outFilePtr = os.path.splitext(outFilePtr)[0]
-    print(outFilePtr)
-outputOfSwarm = Full_List( inFilePtr+".stripped", outFilePtr, theseAlphas)[0]
-print(outputOfSwarm)
+    log.info(outFilePtr)
+outputOfSwarm = Full_List( inFilePtr + ".stripped", outFilePtr, theseAlphas)[0]
+log.info(outputOfSwarm)
 
 bestSpearm = outputOfSwarm[1]
 bestCost = outputOfSwarm[2]
 bestAlpha = theAlphas[outputOfSwarm[4]]
 bestPearsonRHO = outputOfSwarm[0]
 
-    
+print("\nRESULTS")
 print(f"Input file: {inFilePtr}")
-print("Convert factor:: ",bestAlpha)
-print("SSE at best spearman : ", bestCost)    
-print("Best Spearman correlation Dist vs. Reconstructed Dist  : ", bestSpearm) 
-print("Best Pearson correlation Dist vs. Reconstructed Dist: ", bestPearsonRHO) 
-Write_Log(outFilePtr +".log", inFilePtr, bestAlpha, bestCost, bestSpearm, bestPearsonRHO)
+print(f"Convert factor:: {bestAlpha}")
+print(f"SSE at best spearman : {bestCost}")    
+print(f"Best Spearman correlation Dist vs. Reconstructed Dist: {bestSpearm}") 
+print(f"Best Pearson correlation Dist vs. Reconstructed Dist: {bestPearsonRHO}") 
+Write_Log(outFilePtr + ".log", inFilePtr, bestAlpha, bestCost, bestSpearm, bestPearsonRHO)
 
 
 if 'HOSTNAME_BE' in os.environ:
@@ -256,17 +245,8 @@ if 'HOSTNAME_BE' in os.environ:
 
 
 ############################## email section
-import smtplib
-
-from email.message import EmailMessage
-from email.mime.application import MIMEApplication
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.header import Header
-
-
-if not 'SERVICE_EMAIL_KEY' in os.environ or not 'SERVICE_EMAIL' in os.environ:
-    log.warning("Missing email properties in PS.py")
+if 'SERVICE_EMAIL_KEY' not in os.environ or 'SERVICE_EMAIL' not in os.environ:
+    log.warning("Missing email properties in Ps.py")
     sys.exit(0)
 
 gmail_pass = os.environ['SERVICE_EMAIL_KEY'] 
@@ -276,19 +256,20 @@ port = 465
 
 to = emailAddr 
 subject = "ParticleChromo3D"
-emailBody = "\n\nAfter processing the file: " + inFilePtr +" The best Spearman correlation Dist vs. Reconstructed Dist found was : " + str(bestSpearm) \
+emailBody = f"\n\nAfter processing the file: {inFilePtr} The best Spearman correlation Dist vs. Reconstructed Dist found was : {bestSpearm}"  \
   + ". The Best Pearson correlation Dist vs. Reconstructed Dist was : " + str(bestPearsonRHO) +".\n\n"
 inputsEBody = "The parameters for this run were set to {ifname="+ inFilePtr + ", ss="+str(swarmSize)+", itt="+str(ittCount)+\
   ", threshold="+str(threshold) +", randRange="+str(randRange)+"} "
 
 
-body = "Your ParticleChromo3D+ job completed.\n The results can be found at : " +": http://biomlearn.uccs.edu:5001/download?ofname="+outFilePtr + emailBody + inputsEBody
+body = "Your ParticleChromo3D+ job completed.\n The results can be found at : " \
+    + ": http://biomlearn.uccs.edu:5001/download?ofname=" + outFilePtr + emailBody + inputsEBody
 filename = "run.sh"
 
 
 # locate and attach desired attachments
-fileNameForEmail = outFilePtr+".pdb"
-f=open(fileNameForEmail,'r')
+fileNameForEmail = outFilePtr + ".pdb"
+f=open(fileNameForEmail, 'r')
 att = MIMEText(f.read())
 att.add_header("Content-disposition", "attachment", filename=fileNameForEmail)
 f.close()
@@ -304,9 +285,7 @@ message['Subject'] = Header(subject)
 
 # attach message body as MIMEText
 message.attach(MIMEText(body, 'plain', 'utf-8'))
-
 message.attach(att)
-
 
 #  setup email server
 server = smtplib.SMTP_SSL(host, port)

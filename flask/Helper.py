@@ -6,7 +6,6 @@ from scipy.spatial import procrustes
 from collections.abc import Iterable
 from pathlib import Path
 
-
 import numpy as np
 import copy
 
@@ -62,7 +61,7 @@ def Read_Data(filePtr, convFactor=None):
         constraint[i][0] = pointMap[constraint[i][0]]
         constraint[i][1] = pointMap[constraint[i][1]]
 
-    mean = np.mean(constraint[:,2])
+    #mean = np.mean(constraint[:,2])
 
     #dist = np.zeros(constraint.shape[0])
     #if maxScale is not None:
@@ -77,7 +76,7 @@ def Read_Data(filePtr, convFactor=None):
 # Calcualtes the average number of contacts
 def avgCalc(constraint, convFactor):
     avgIf = constraint.mean(axis=0)[2]
-    avgDist = 0
+    #avgDist = 0
 
     constrAvg = copy.copy(constraint[:,2])
 
@@ -189,7 +188,7 @@ def Write_Log(outfile, inFile, bestAlpha, rmse, bestSpearmanRHO,bestPearsonRHO):
     inString = ("Input file: " + str(inFile) + "\n"+"Convert factor:: " + str(bestAlpha)+ "\n" +
         "Best cost  : "+ str(rmse)+ "\n"+"Best Spearman correlation Dist vs. Reconstructed Dist  : "+ str(bestSpearmanRHO)+ "\n" + "Best Pearson correlation Dist vs. Reconstructed Dist  : "+ str(bestPearsonRHO)) + "\n"
 
-    FILE.write(inString);
-    FILE.close();
+    FILE.write(inString)
+    FILE.close()
     
     
