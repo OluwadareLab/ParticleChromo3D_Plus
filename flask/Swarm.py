@@ -118,7 +118,7 @@ class Swarm:
         self.posBest[tmpMsk] = copy.copy(self.pos)[tmpMsk]
         self.costBest[tmpMsk] = self.cost[tmpMsk]
 
-        currentBest = np.argmin(self.cost);
+        currentBest = np.argmin(self.cost)
 
         if (self.gBest is None) or (self.cost[currentBest] < self.gBest[1]):
             self.gBest = (copy.copy(self.pos[currentBest]),copy.copy(self.cost[currentBest][0]), copy.copy(self.dist[currentBest]))

@@ -1,6 +1,6 @@
 
 ## imports
-from flask import Flask, render_template, jsonify , request, send_file, redirect
+from flask import Flask, render_template, request, send_file, redirect
 import subprocess
 from werkzeug.utils import secure_filename
 import os
@@ -14,9 +14,11 @@ regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 # Non flask functions
 def make_tree(path):
     tree = dict(name=os.path.basename(path), children=[])
-    try: lst = os.listdir(path)
-    except OSError:
-        pass #ignore errors
+    try: 
+        lst = os.listdir(path)
+    except OSError as ose:
+       print(ose) 
+        #pass #ignore errors
     else:
         for name in lst:
             fn = os.path.join(path, name)
@@ -74,7 +76,6 @@ def home():
 @app.route("/neo")
 def neo():
   return subprocess.check_output("python3 pdbToNeo4j.py", shell=True)
-
 
 
 @app.route('/form')

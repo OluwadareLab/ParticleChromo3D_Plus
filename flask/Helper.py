@@ -162,7 +162,7 @@ def WritePDB(positions, pdb_file, ctype = "0"):
         col2 = " " * (5 - len(col2)) + col2
         col3 = " " * (5 - len(col3)) + col3
 
-        line = "%s%s%s\n" % (col1, col2, col3)
+        line = f"{col1}{col2}{col3}\n"
         o_file.write(line)
 
     o_file.write("END")
@@ -185,11 +185,11 @@ def Read_PDB(filePtr):
     return np.asarray(xyz)	 
 
 def Write_Log(outfile, inFile, bestAlpha, rmse, bestSpearmanRHO,bestPearsonRHO):
-    FILE = open(outfile, 'w');
+    FILE = open(outfile, 'w')
     inString = ("Input file: " + str(inFile) + "\n"+"Convert factor:: " + str(bestAlpha)+ "\n" +
         "Best cost  : "+ str(rmse)+ "\n"+"Best Spearman correlation Dist vs. Reconstructed Dist  : "+ str(bestSpearmanRHO)+ "\n" + "Best Pearson correlation Dist vs. Reconstructed Dist  : "+ str(bestPearsonRHO)) + "\n"
 
-    FILE.write(inString);
-    FILE.close();
+    FILE.write(inString)
+    FILE.close()
     
     

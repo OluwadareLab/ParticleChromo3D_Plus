@@ -12,11 +12,8 @@ def squarify(mat):
     squareMat = np.zeros((maxBin,maxBin))
     
     for row in mat:
-
         squareMat[row[0]][row[1]] = row[2]
         squareMat[row[1]][row[0]] = row[2]
-    
- 
     
     return squareMat
 
