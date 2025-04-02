@@ -8,7 +8,7 @@
 
 ----------------------------------------------------------------------
 **Build Status** <br />
-[![Build Status](https://github.com/OluwadareLab/ParticleChromo3D_Plus/workflows/Docker%20Image%20CI/badge.svg?branch=main)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions?query=branch%3Amain)
+[![Build Status](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/main.yml/badge.svg)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/main.yml)<p align="center">
 
 **Developers:** <br />
 		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;David Vadnais<br />
@@ -47,10 +47,10 @@ Or convert using the convert endpoint after uploading the Sparse Matrix as a TSV
 **4.	Dependencies Installation:**
 -----------------------------------------------------------
 ### With Docker
-Docker <br />
+Docker <br/>
 
 ### Without Docker
-See config/requirements.txt
+See [config/requirements.txt](config/requirements.txt)
 
 **5. Usage - Docker**
 -----------------------------------------------------------
