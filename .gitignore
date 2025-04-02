@@ -1,0 +1,5 @@
+**/out/**
+*.stripped
+.venv
+*.swp
+__pycache__/
