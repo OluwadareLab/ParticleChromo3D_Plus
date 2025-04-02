@@ -69,16 +69,24 @@ Then [run](https://docs.docker.com/engine/reference/commandline/run/) the contai
 
 ### [Volumes](https://docs.docker.com/storage/volumes/) (Persisting Data)
 Working with volumes:
-* ```docker volume create ${VOLUME_NAME}```
-* ```docker volume inspect ${VOLUME_NAME}```
-* ```docker volume ls```
-* ```docker volume rm ${VOLUME_NAME}```
+```bash
+# Manage your volume
+docker volume create ${VOLUME_NAME}
+docker volume inspect ${VOLUME_NAME}
+docker volume ls
+docker volume rm ${VOLUME_NAME}
 
-* ```docker run -d -p 5001:5001 -p 8080:8080  -e SERVICE_EMAIL=${YOUR_SVC_EMAIL} -e HOSTNAME_BE=${YOUR_URL} -e SERVICE_EMAIL_KEY=${KEY} particlechromo3d:latest```
+# Run using a volume
+docker run -d -p 5001:5001 -p 8080:8080  -e SERVICE_EMAIL=${YOUR_SVC_EMAIL} -e HOSTNAME_BE=${YOUR_URL} -e SERVICE_EMAIL_KEY=${KEY} particlechromo3d:latest
+```
 
 **7. Usage - Direct:**
 -----------------------------------------------------------
 In lieu of using docker flask/Ps.py can be run directly through:
+* Clone this repo.
+* cd ParticleChromo3D_Plus/config
+* pip install -r requirements.txt
+* cd ../flask
 * ```python Ps.py ${INPUT_MATRIX}```
 
 Use ```python Ps.py --help``` to find out more about the run options.
