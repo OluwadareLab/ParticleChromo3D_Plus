@@ -24,8 +24,7 @@ RUN mkdir /apt/repo/
 RUN mkdir /apt/out
 RUN mkdir /apt/upload
 
-#VOLUME /apt/upload
-
+RUN rm /usr/lib/python3.*/EXTERNALLY-MANAGED
 COPY config/requirements.txt /apt
 COPY flask/* /apt/
 COPY exampleIfs/* /apt/repo/
