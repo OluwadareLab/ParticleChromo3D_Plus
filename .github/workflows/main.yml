@@ -7,18 +7,21 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag particlechromo3d:$(date +%s) --tag particlechromo3d:latest
-    - name: save docker image
+
+    - name: Save docker image
       run: docker image save particlechromo3d:latest -o particlechromo3d_image.tar.gz
-    - uses: actions/upload-artifact@v3
+
+    - name: Upload docker image as artifact
+      uses: actions/upload-artifact@v4
       with:
         name: particlechromo3d_image
         path: particlechromo3d_image.tar.gz
