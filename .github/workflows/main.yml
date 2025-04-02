@@ -20,5 +20,5 @@ jobs:
       run: docker image save particlechromo3d:latest -o particlechromo3d_image.tar.gz
     - uses: actions/upload-artifact@v3
       with:
-        name: particlechromo3d_image.tar.gz
+        name: particlechromo3d_image
         path: particlechromo3d_image.tar.gz
