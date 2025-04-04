@@ -12,7 +12,7 @@ class Neo4jConnection:
         try:
             self.__driver = GraphDatabase.driver(self.__uri, auth=(self.__user, self.__pwd))
         except Exception as e:
-            print("Failed to create the driver:", e)
+            print(f"Failed to create the driver: {e}")
         
     def close(self):
         if self.__driver is not None:
@@ -26,13 +26,13 @@ class Neo4jConnection:
             session = self.__driver.session(database=db) if db is not None else self.__driver.session() 
             response = list(session.run(query))
         except Exception as e:
-            print("Query failed:", e)
+            print(f"Query failed: {e}")
         finally: 
             if session is not None:
                 session.close()
         return response
         
-conn = Neo4jConnection(uri="bolt://davidvadnais.com:7687", user="neo4j", pwd="galaxy-vodka-patriot-switch-maxwell-4615")
+conn = Neo4jConnection(uri="bolt://davidvadnais.com:7687", user="neo4j", pwd="DUMMYPASSWORD")
 
 query_string = '''
 // Delete all

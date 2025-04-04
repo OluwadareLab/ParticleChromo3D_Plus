@@ -23,7 +23,7 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 # Initialize logger
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 # I should refactor these but I dont think the interest
 randRange = None
@@ -65,14 +65,13 @@ def Print_Stats(swarm, contact, pointCount, i, outFilePtr, convFact):
 
     error = np.sqrt((1 / pointCount) * np.sum((swarm.gBest[2] - contact[:, 3]) ** 2))
 
-    """print('id: ' + str(swarm.id) + 
+    logger.debug('id: ' + str(swarm.id) + 
         ' itt: ' + str(i) + 
         ' Cost: ' + str(swarm.gBest[1]) + 
         ' Pearson: ' + str(pers[0]) + 
         ' Spearmen: ' + str(spear[0]) +
         ' IFSpear: ' + str(spearIF[0]) +
-        ' error: ' + str(error))"""
-    thisOutFilePtr = "outputFolder/" + outFilePtr + str(convFact)
+        ' error: ' + str(error))
 
 
 def Write_Stats(swarm, contact, outFilePtr):
@@ -186,8 +185,6 @@ def Par_Choice(inFilePtr, outFilePtr, alpha):
         pool.close()
         pool.join()
 
-        # swarms = sorted(swarms, key=lambda x: x[1])
-
         iforapl = 0
         for swarm in swarms:
             # print(str(swarm[-1]) + ' ' + str(swarm[1]))
@@ -222,6 +219,11 @@ def Full_List(inputFilePtr, outFilePtr, alpha):
 
     # Helper.Write_List(convStore, outFilePtr)
     return convStore
+
+def setup_logging(loglevel):
+    level = getattr(logging, loglevel.upper())  # Convert string to corresponding logging level
+    logging.basicConfig(level=level,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 if __name__ == "__main__":
@@ -286,6 +288,16 @@ if __name__ == "__main__":
         type=str,
         default="2",
     )
+    parser.add_argument(
+        "-ll",
+        "--logLevel",
+        help="Log level [Default INFO]",
+        type=str,
+        default="INFO",
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],  # Valid log levels
+    )
+
+    
 
     args = parser.parse_args()
 
@@ -307,13 +319,16 @@ if __name__ == "__main__":
     if args.lossFunction:
         lossFunctionChoice = int(args.lossFunction)
 
+    setup_logging(args.logLevel)  # Set logging level
+    logger.info(f"Starting ParticleChromo3D with log level: {args.logLevel}")
+
     if len(rangeSpace) == 0:
         rangeSpace.append(20000)
 
     if len(rangeSpace) > 2 and (rangeSpace[0] == rangeSpace[1]):
         rangeSpace.pop()
 
-    print(inFilePtr)
+    logger.info(f"proccessing file : {inFilePtr}")
 
     fout = inFilePtr + ".stripped"
     clean_lines = []
@@ -337,20 +352,20 @@ if __name__ == "__main__":
     if outFilePtr == "noIn":
         outFilePtr = os.path.basename(os.path.basename(inFilePtr) + str(uuid.uuid4()))
         outFilePtr = os.path.splitext(outFilePtr)[0]
-        print(outFilePtr)
+        logger.info(outFilePtr)
     outputOfSwarm = Full_List(inFilePtr + ".stripped", outFilePtr, theseAlphas)[0]
-    print(outputOfSwarm)
+    logger.info(outputOfSwarm)
 
     bestSpearm = outputOfSwarm[1]
     bestCost = outputOfSwarm[2]
     bestAlpha = theAlphas[outputOfSwarm[4]]
     bestPearsonRHO = outputOfSwarm[0]
 
-    print(f"Input file: {inFilePtr}")
-    print("Convert factor:: ", bestAlpha)
-    print("SSE at best spearman : ", bestCost)
-    print("Best Spearman correlation Dist vs. Reconstructed Dist  : ", bestSpearm)
-    print("Best Pearson correlation Dist vs. Reconstructed Dist: ", bestPearsonRHO)
+    logger.info(f"Input file: {inFilePtr}")
+    logger.info(f"Convert factor:: {bestAlpha}")
+    logger.info(f"SSE at best spearman : {bestCost}")
+    logger.info(f"Best Spearman correlation Dist vs. Reconstructed Dist  : {bestSpearm}")
+    logger.info(f"Best Pearson correlation Dist vs. Reconstructed Dist: {bestPearsonRHO}")
     Write_Log(
         outFilePtr + ".log", inFilePtr, bestAlpha, bestCost, bestSpearm, bestPearsonRHO
     )
@@ -367,7 +382,7 @@ if __name__ == "__main__":
     ############################## email section
 
     if "SERVICE_EMAIL_KEY" not in os.environ or "SERVICE_EMAIL" not in os.environ:
-        log.warning("Missing email properties in PS.py")
+        logger.warning("Missing email properties in PS.py")
         sys.exit(0)
 
     gmail_pass = os.environ["SERVICE_EMAIL_KEY"]
