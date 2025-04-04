@@ -1,6 +1,6 @@
 FROM tomcat
 
-MAINTAINER ooluwada@uccs.edu
+LABEL maintainer="ooluwada@uccs.edu"
 
 #FOSS installs
 RUN apt-get update && apt-get -y upgrade
@@ -24,6 +24,7 @@ RUN mkdir /apt/repo/
 RUN mkdir /apt/out
 RUN mkdir /apt/upload
 
+# this happens when you mix apt python packages with pip
 RUN rm /usr/lib/python3.*/EXTERNALLY-MANAGED
 COPY config/requirements.txt /apt
 COPY flask/* /apt/

@@ -1,4 +1,3 @@
-import Swarm
 
 from Bio import PDB
 from scipy.spatial import procrustes

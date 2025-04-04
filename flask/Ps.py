@@ -197,7 +197,7 @@ def Par_Choice(inFilePtr, outFilePtr, alpha):
     else:
         bestSwarm = Optimize(inFilePtr, outFilePtr, alpha)
     contact = np.insert(contact, 3, 1.0 / (contact[:, 2] ** bestAlpha), axis=1)
-    print(bestSwarm)
+    logger.info(f"bestSwarm : {bestSwarm}")
     Write_Stats(swarmForPDB, contact, outFilePtr)
 
     return bestSwarm
@@ -208,13 +208,10 @@ def Full_List(inputFilePtr, outFilePtr, alpha):
     convStore = []
 
     convStore.append(Par_Choice(inputFilePtr, outFilePtr, alpha))
-    print(
-        "pearson:"
-        + str(convStore[0][0])
-        + " spearman:"
-        + str(convStore[0][1])
-        + " rmse:"
-        + str(convStore[0][2])
+    logger.info(
+        f"pearson: {convStore[0][0]}"
+        + f" spearman: {convStore[0][1]}"
+        + f" rmse: {convStore[0][2]}"
     )
 
     # Helper.Write_List(convStore, outFilePtr)
