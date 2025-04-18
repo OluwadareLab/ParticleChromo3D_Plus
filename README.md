@@ -104,7 +104,7 @@ Use ```python Ps.py --help``` to find out more about the run options.
 We use pytest in the root level for unit testing. Simply install pytest and run `pytest`.
 
 **Coverage:**
-pytest --cov=ParticleChromo3D --cov-report=term --cov-report=html
+`pytest --cov=ParticleChromo3D --cov-report=term --cov-report=html`
 
 **8.	Publication:**
 -----------------------------------------------------------
