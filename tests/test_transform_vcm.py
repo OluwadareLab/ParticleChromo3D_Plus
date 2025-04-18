@@ -87,9 +87,9 @@ def test_transform_vcm_script(sparse_frequency_file, script_path):
     logger.debug(f"running python {script_path} -o {base_output_path} {sparse_frequency_file}")        
     result = subprocess.run(
         ["python", script_path, "-o", base_output_path, sparse_frequency_file],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
+        capture_output=True, # get sub process returns
+        env=env, # otherwise windows fix wont work
+        text=True,
     )
     
     assert result.returncode == 0, "Script did not exit cleanly"
@@ -145,4 +145,4 @@ def test_transform_vcm_script_no_args(sparse_frequency_file, script_path):
         text=True
     )
 
-    assert result.returncode != 1, "Script did not fail correctly" 
+    assert result.returncode != 0, "Script did not fail correctly" 

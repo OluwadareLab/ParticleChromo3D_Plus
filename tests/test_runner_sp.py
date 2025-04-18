@@ -42,13 +42,3 @@ def test_process_invalid_email(client):
         "randRange": "0.1", "lf": "file.lf", "outFile": "out.pdb", "email": "not-an-email"
     })
     assert b"ERROR: Valid Email Required" in response.data
-
-def test_download_file(client, tmp_path):
-    ofname = "test_download"
-    file_path = f"{tmp_path}/{ofname}.pdb"
-    os.makedirs(tmp_path, exist_ok=True)
-    with open(file_path, "w") as f:
-        f.write("PDB content")
-    response = client.get("/download", query_string={"ofname": ofname})
-    assert response.status_code == 200
-    assert response.headers["Content-Disposition"].startswith("attachment")

@@ -28,10 +28,6 @@ def squarify(mat):
 def main(input_file, output, delimiter = '\t'):   
     logger = setup_logger()
 
-    if len(sys.argv) < 2:
-        logger.error("Usage: python TransformVCM.py <input_file>")
-        sys.exit(1)
-
     threeMat = []
     with open(input_file, 'r') as f:
         reader = csv.reader(f, delimiter=delimiter)
