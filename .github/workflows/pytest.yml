@@ -26,4 +26,6 @@ jobs:
         pip install -r config/requirements_test.txt
 
     - name: Run pytest
-      run: pytest  --cov=ParticleChromo3D --cov-report=xml --fail-under=65
+      run: |
+        cd ParticleChromo3D_Plus
+        pytest  --cov=ParticleChromo3D --cov-report=xml --fail-under=65
