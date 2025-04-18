@@ -9,8 +9,11 @@
 ----------------------------------------------------------------------
 **Build Status** : 
 [![Build Status](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/main.yml/badge.svg)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/main.yml)<p align="center">
-**Test Status** : [![pytest](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml/badge.svg)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml)
 
+**Test Status** : 
+[![pytest](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml/badge.svg)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml)
+
+----------------------------------------------------------------------
 **Developers:** <br />
 		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;David Vadnais<br />
 		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Department of Computer Science <br />
