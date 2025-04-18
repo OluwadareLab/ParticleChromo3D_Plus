@@ -2,20 +2,12 @@
 from ParticleChromo3D.pdbToNeo4j import Neo4jConnection
 from neo4j.exceptions import ConfigurationError
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, mock_open
 
-@pytest.fixture
-def fake_pdb_file(tmp_path):
-    pdb_content = """\
+PDB_CONTENT = """\
 ATOM      1   CA MET B1         -3.335   9.556  -6.690  0.20 10.00
 ATOM      2   CA MET B2         -3.326   9.982  -6.826  0.20 10.00
-ATOM      3   CA MET B3         -3.230  10.000  -6.925  0.20 10.00
-ATOM      4   CA MET B4         -3.185   9.988  -6.655  0.20 10.00
-ATOM      5   CA MET B5         -3.677   9.372  -6.043  0.20 10.00
 """
-    file_path = tmp_path / "test.pdb"
-    file_path.write_text(pdb_content)
-    return file_path
 
 def test_init_Neo4jConnection():
     uri = "localhost"
@@ -60,8 +52,48 @@ def test_neo4j_connection_mock(GraphDatabaseMock):
     
     result = conn.query("MATCH (n) RETURN n")
 
+    conn.close()
+
     # Assertions
     assert result == ["mock result"]
     GraphDatabaseMock.driver.assert_called_once_with("bolt://fakehost:7687", auth=("fakeuser", "fakepwd"))
     mock_session.run.assert_called_once_with("MATCH (n) RETURN n")
     mock_session.close.assert_called_once()
+
+@patch("builtins.open", new_callable=mock_open, read_data=PDB_CONTENT)
+@patch("ParticleChromo3D.pdbToNeo4j.GraphDatabase")
+def test_run_method(graphdb_mock, mock_file):
+    # Setup mock Neo4j session
+    mock_driver = MagicMock()
+    mock_session = MagicMock()
+    mock_session.run.return_value = []
+    mock_driver.session.return_value = mock_session
+    graphdb_mock.driver.return_value = mock_driver
+
+    conn = Neo4jConnection(uri="bolt://fakehost:7687", user="user", pwd="pwd")
+    conn.connect()
+
+    # Patch the query method to monitor calls
+    with patch.object(conn, 'query', wraps=conn.query) as query_spy:
+        conn.run()
+
+        # Assert at least one CREATE query was issued
+        create_calls = [call for call in query_spy.call_args_list if "CREATE" in call.args[0]]
+        assert len(create_calls) > 0, "Expected at least one CREATE query"
+
+        # Verify that some queries (like DELETE and CREATE) were issued
+        queries = [call.args[0] for call in query_spy.call_args_list]
+        assert any("DELETE" in q for q in queries), "No DELETE query found"
+        assert any("CREATE" in q for q in queries), "No CREATE query found"
+
+# Test: Ensure that if the driver is not initialized, it raises an assertion error
+@patch("ParticleChromo3D.pdbToNeo4j.GraphDatabase")
+def test_query_with_no_driver(mock_graphdb):
+    # Mock the driver to simulate the case where it's not initialized
+    mock_driver = None
+    mock_graphdb.driver.return_value = mock_driver
+
+    conn = Neo4jConnection(uri="bolt://fakehost:7687", user="user", pwd="pwd")
+    
+    with pytest.raises(AssertionError, match="Driver not initialized!"):
+        conn.query("MATCH (n) RETURN n")  # Attempt to query without connecting first
