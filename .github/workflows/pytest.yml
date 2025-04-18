@@ -27,6 +27,4 @@ jobs:
 
     - name: Run pytest
       working-directory: ParticleChromo3D
-      run: |
-        pytest  --cov=ParticleChromo3D --cov-report=xml
-        coverage report --fail-under=65
+      run: pytest  --cov=ParticleChromo3D --cov-report=xml --cov-fail-under=65
