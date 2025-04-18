@@ -3,3 +3,4 @@ Biopython
 scipy
 numpy
 secure-smtplib
+neo4j
