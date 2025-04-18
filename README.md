@@ -7,8 +7,9 @@
 **University of Colorado, Colorado Springs**
 
 ----------------------------------------------------------------------
-**Build Status** <br />
+**Build Status** : 
 [![Build Status](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/main.yml/badge.svg)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/main.yml)<p align="center">
+**Test Status** : [![pytest](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml/badge.svg)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml)
 
 **Developers:** <br />
 		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;David Vadnais<br />
@@ -28,7 +29,7 @@
 -----------------------------------------------------------	
 * configs: Python Dependencies <br />
 * exampleIfs: Synthetic and Real Hi-C datasets examples. <br />
-* flask: Source Code and utility's used.<br />
+* ParticleChromo3D: Source Code and utility's used.<br />
 * help: Example scripts to help a user get started with our webserver. <br />
 * results: Output structures generated for all the experiments performed. <br />
 * website: front end code
@@ -82,14 +83,21 @@ docker run -d -p 5001:5001 -p 8080:8080  -e SERVICE_EMAIL=${YOUR_SVC_EMAIL} -e H
 
 **7. Usage - Direct:**
 -----------------------------------------------------------
-In lieu of using docker flask/Ps.py can be run directly through:
-* Clone this repo.
-* cd ParticleChromo3D_Plus/config
-* pip install -r requirements.txt
-* cd ../flask
-* ```python Ps.py ${INPUT_MATRIX}```
+In lieu of using docker ParticleChromo3D/Ps.py can be run directly through:
+```bash
+git clone git@github.com:OluwadareLab/ParticleChromo3D_Plus.git
+cd ParticleChromo3D_Plus/config
+pip install -r requirements.txt
+
+python ParticleChromo3D/Ps.py ${INPUT_MATRIX}
+# example Windows: python .\ParticleChromo3D\Ps.py exampleIfs\chr20_matrix.txt
+# example Linux: python ParticleChromo3D/Ps.py exampleIfs/chr20_matrix.txt
+```
 
 Use ```python Ps.py --help``` to find out more about the run options.
+
+**Unit Test:**
+We use pytest in the root level for unit testing. Simply install pytest and run `pytest`.
 
 **8.	Publication:**
 -----------------------------------------------------------

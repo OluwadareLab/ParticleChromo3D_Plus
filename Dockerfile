@@ -27,7 +27,7 @@ RUN mkdir /apt/upload
 # this happens when you mix apt python packages with pip
 RUN rm /usr/lib/python3.*/EXTERNALLY-MANAGED
 COPY config/requirements.txt /apt
-COPY flask/* /apt/
+COPY ParticleChromo3D/* /apt/
 COPY exampleIfs/* /apt/repo/
 
 RUN mv /apt/*.html /apt/templates/

@@ -5,7 +5,6 @@ import sys
 def squarify(mat):
     
     maxBin = 0
-    minBin = 0
     for row in mat:
         maxBin = max(maxBin, row[0]+1, row[1]+1) 
         

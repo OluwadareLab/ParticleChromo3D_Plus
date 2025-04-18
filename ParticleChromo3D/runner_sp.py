@@ -68,7 +68,7 @@ def home():
   if (not check(email)):
     return "ERROR: Valid Email Required <br> Use back to return home"
   else:
-    p = subprocess.Popen(thecmd, shell=True, stdout=subprocess.PIPE, 
+    _ = subprocess.Popen(thecmd, shell=True, stdout=subprocess.PIPE, 
                      stderr=subprocess.PIPE)
     return "Processing has begun. You will recieve an email upon its completion."  
     #return subprocess.check_output(thecmd, shell=True) # uncomment this to debug the python
@@ -107,7 +107,7 @@ def convert():
   iffname = request.args.get('filename', type=str)
   path = "//apt//upload//" + iffname
   thecmd = "python3 TransformVCM.py " + path
-  p = subprocess.Popen(thecmd, shell=True, stdout=subprocess.PIPE,
+  _ = subprocess.Popen(thecmd, shell=True, stdout=subprocess.PIPE,
                      stderr=subprocess.PIPE)
 
   path2="/apt/convert.out"

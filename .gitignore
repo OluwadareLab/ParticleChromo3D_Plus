@@ -3,3 +3,6 @@
 .venv
 *.swp
 __pycache__/
+.vscode
+.ruffcache
+htmlcov/
