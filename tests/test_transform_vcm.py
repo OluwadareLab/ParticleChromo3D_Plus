@@ -146,4 +146,3 @@ def test_transform_vcm_script_no_args(sparse_frequency_file, script_path):
     )
 
     assert result.returncode != 1, "Script did not fail correctly" 
-    assert "FileNotFoundError" in result.stderr

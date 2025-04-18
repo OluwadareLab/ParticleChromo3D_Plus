@@ -21,6 +21,7 @@ import uuid
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
+from particle_chromo_logger import setup_logger
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -217,11 +218,6 @@ def Full_List(inputFilePtr, outFilePtr, alpha):
     # Helper.Write_List(convStore, outFilePtr)
     return convStore
 
-def setup_logging(loglevel):
-    level = getattr(logging, loglevel.upper())  # Convert string to corresponding logging level
-    logging.basicConfig(level=level,
-                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
 
 if __name__ == "__main__":
     sys.setrecursionlimit(10000)
@@ -316,7 +312,7 @@ if __name__ == "__main__":
     if args.lossFunction:
         lossFunctionChoice = int(args.lossFunction)
 
-    setup_logging(args.logLevel)  # Set logging level
+    setup_logger(args.logLevel)  # Set logging level
     logger.info(f"Starting ParticleChromo3D with log level: {args.logLevel}")
 
     if len(rangeSpace) == 0:

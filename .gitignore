@@ -6,3 +6,6 @@ __pycache__/
 .vscode
 .ruffcache
 htmlcov/
+*.out
+*.log
+.coverage

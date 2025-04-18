@@ -11,7 +11,8 @@
 [![Build Status](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/main.yml/badge.svg)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/main.yml)<p align="center">
 
 **Test Status** : 
-[![pytest](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml/badge.svg)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml)
+[![pytest](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml/badge.svg)](https://github.com/OluwadareLab/ParticleChromo3D_Plus/actions/workflows/pytest.yml)<br>
+*Also checks coverage stats*
 
 ----------------------------------------------------------------------
 **Developers:** <br />
