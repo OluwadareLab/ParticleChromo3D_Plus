@@ -1,6 +1,6 @@
 import logging
 
-def setup_logger(log_level = logging.DEBUG):
+def setup_logger(log_level = logging.INFO):
     logger = logging.getLogger('ParticleChromo3D')  # Create a named logger
     logger.setLevel(log_level)  # You can set this to DEBUG, WARNING, etc.
     
