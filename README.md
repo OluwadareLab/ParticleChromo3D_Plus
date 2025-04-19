@@ -33,7 +33,7 @@
 -----------------------------------------------------------
 We released a [pypi package.](https://pypi.org/project/ParticleChromo3D/1.0.1/)
 
-Simply run pip install ParticleChromo3D
+Simply run : `pip install ParticleChromo3D`
 
 **1.	Content of folders:**
 -----------------------------------------------------------	
