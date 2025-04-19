@@ -37,7 +37,7 @@ We released a [pypi package.](https://pypi.org/project/ParticleChromo3D/1.0.1/)
 Simply run : `pip install ParticleChromo3D`
 
 Then :
-'''python
+```python
 from ParticleChromo3D import Ps
 import numpy as np
 
@@ -62,7 +62,7 @@ print(f"Best Pearson correlation Dist vs. Reconstructed Dist: {bestPearsonRHO}")
 Ps.Write_Log(
     "this_run.log", fout, bestAlpha, bestCost, bestSpearm, bestPearsonRHO
 )
-'''
+```
 
 **1.	Content of folders:**
 -----------------------------------------------------------	
