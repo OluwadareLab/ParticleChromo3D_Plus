@@ -8,7 +8,7 @@ def parse_requirements():
 
 setup(
     name="ParticleChromo3D",
-    version="1.0.2",
+    version="1.0.3",
     description="3D chromosome structure reconstruction using ParticleChromo3D+",
     author="Oluwadare Lab",
     author_email="dvadnais@uccs.edu",
@@ -21,4 +21,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    long_description=open('README.md').read(),  # Read description from README
+    long_description_content_type='text/markdown',  # Or 'text/x-rst' for reStructuredText
 )
