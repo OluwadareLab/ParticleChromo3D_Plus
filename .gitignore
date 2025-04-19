@@ -10,3 +10,6 @@ htmlcov/
 *.log
 .coverage
 coverage.xml
+ParticleChromo3D.egg-info/
+build/
+dist/
