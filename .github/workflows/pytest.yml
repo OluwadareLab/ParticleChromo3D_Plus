@@ -24,9 +24,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r config/requirements.txt
         pip install -r config/requirements_test.txt
+        pip install .
 
     - name: Run pytest
       run: |
-        pytest  
+        pytest --cov=ParticleChromo3D --cov-report=xml 
         # turn this back online when we figure out why local and github stats are different
         # pytest --cov=ParticleChromo3D --cov-report=xml --cov-fail-under=65
