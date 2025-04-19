@@ -31,9 +31,38 @@
 
 **0.	Pip install:**
 -----------------------------------------------------------
+NOTE: This usage is underconstruction.<br>
 We released a [pypi package.](https://pypi.org/project/ParticleChromo3D/1.0.1/)
 
 Simply run : `pip install ParticleChromo3D`
+
+Then :
+'''python
+from ParticleChromo3D import Ps
+import numpy as np
+
+fout = Ps.strip_file("exampleIfs/chr22_matrix.txt")
+
+# this will all get moved into a self contained function soon
+theseAlphas = np.array([0.1, 2.0, 0.1]) * 100
+theAlphas = ( np.array(range(int(theseAlphas[0]), int(theseAlphas[1]), int(theseAlphas[2]))) / 100)
+
+outputOfSwarm = Ps.Full_List(fout, "this_pdb", theseAlphas)[0]
+
+bestSpearm = outputOfSwarm[1]
+bestCost = outputOfSwarm[2]
+bestAlpha = theAlphas[outputOfSwarm[4]]
+bestPearsonRHO = outputOfSwarm[0]
+
+print(f"Convert factor:: {bestAlpha}")
+print(f"SSE at best spearman : {bestCost}")
+print(f"Best Spearman correlation Dist vs. Reconstructed Dist  : {bestSpearm}")
+print(f"Best Pearson correlation Dist vs. Reconstructed Dist: {bestPearsonRHO}")
+
+Ps.Write_Log(
+    "this_run.log", fout, bestAlpha, bestCost, bestSpearm, bestPearsonRHO
+)
+'''
 
 **1.	Content of folders:**
 -----------------------------------------------------------	

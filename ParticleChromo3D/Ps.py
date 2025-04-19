@@ -1,5 +1,3 @@
-from Swarm import Swarm
-import Helper
 
 import sys
 import argparse
@@ -9,11 +7,13 @@ import logging
 import numpy as np
 from scipy import stats
 
-from multiprocessing import Pool
-from multiprocessing import cpu_count
+from multiprocessing import Pool, cpu_count
 from itertools import repeat
 
-from Helper import Write_Log
+from ParticleChromo3D.Swarm import Swarm
+import ParticleChromo3D.Helper as Helper
+from ParticleChromo3D.Helper import Write_Log
+from ParticleChromo3D.particle_chromo_logger import setup_logger
 
 # email imports
 import smtplib
@@ -21,7 +21,6 @@ import uuid
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
-from particle_chromo_logger import setup_logger
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -157,15 +156,14 @@ def Optimize(
 
 
 # Runs in paralel if passed multiple rangeSpace
-def Par_Choice(inFilePtr, outFilePtr, alpha):
-    global randRange, swarmSize, threshold, ittCount, lossFunctionChoice
+def Par_Choice(inFilePtr, outFilePtr, alpha, randRange, swarmSize, threshold, ittCount, lossFunctionChoice):
     contact, points, zeroInd = Helper.Read_Data(inFilePtr, alpha)
 
     bestSwarm = None
     if 1 == 1:
         convStore = []
         alphas = np.array(range(int(alpha[0]), int(alpha[1]), int(alpha[2]))) / 100
-        pool = Pool(processes=PROC_COUNT)
+        pool = Pool(processes=get_proc_count())
         swarms = pool.starmap(
             Optimize,
             zip(
@@ -203,12 +201,26 @@ def Par_Choice(inFilePtr, outFilePtr, alpha):
 
     return bestSwarm
 
+def strip_file(in_file):
+    fout = in_file + ".stripped"
+    clean_lines = []
+    f = open(in_file, "r")
+    lines = f.readlines()
+    for line in lines:
+        res = str(" ".join(line.split()))
+        clean_lines.append(res)
+    f.close()
 
-def Full_List(inputFilePtr, outFilePtr, alpha):
-    global randRange
+    with open(fout, "w") as f:
+        f.writelines("\n".join(clean_lines))
+    f.close()
+    return fout
+
+
+def Full_List(inputFilePtr, outFilePtr, alpha,randRange=0.1, swarmSize=5, threshold=0.000001, ittCount=30000, lossFunctionChoice=2):
     convStore = []
 
-    convStore.append(Par_Choice(inputFilePtr, outFilePtr, alpha))
+    convStore.append(Par_Choice(inputFilePtr, outFilePtr, alpha, randRange, swarmSize, threshold, ittCount, lossFunctionChoice))
     logger.info(
         f"pearson: {convStore[0][0]}"
         + f" spearman: {convStore[0][1]}"
@@ -218,13 +230,17 @@ def Full_List(inputFilePtr, outFilePtr, alpha):
     # Helper.Write_List(convStore, outFilePtr)
     return convStore
 
+def get_proc_count():
+    ''' attempt to reduce thrashing.'''
+    if cpu_count() <= 2:
+        return cpu_count()
+    else:
+        return cpu_count() - 1  
+
 
 if __name__ == "__main__":
     sys.setrecursionlimit(10000)
-    if cpu_count() <= 2:
-        PROC_COUNT = cpu_count()
-    else:
-        PROC_COUNT = cpu_count() - 1  # attempt to reduce thrashing.
+    
 
     rangeSpace = []  # Max scaling factor. Needs to be optimized for each specific dataset. Use two values [one, two] to multithread through a range of those two values at a interval of 5000
 
@@ -323,18 +339,7 @@ if __name__ == "__main__":
 
     logger.info(f"proccessing file : {inFilePtr}")
 
-    fout = inFilePtr + ".stripped"
-    clean_lines = []
-    f = open(inFilePtr, "r")
-    lines = f.readlines()
-    for line in lines:
-        res = str(" ".join(line.split()))
-        clean_lines.append(res)
-    f.close()
-
-    with open(fout, "w") as f:
-        f.writelines("\n".join(clean_lines))
-    f.close()
+    fout = strip_file(inFilePtr)
 
     theseAlphas = np.array([0.1, 2.0, 0.1]) * 100
     theAlphas = (
@@ -345,8 +350,8 @@ if __name__ == "__main__":
     if outFilePtr == "noIn":
         outFilePtr = os.path.basename(os.path.basename(inFilePtr) + str(uuid.uuid4()))
         outFilePtr = os.path.splitext(outFilePtr)[0]
-        logger.info(outFilePtr)
-    outputOfSwarm = Full_List(inFilePtr + ".stripped", outFilePtr, theseAlphas)[0]
+        logger.info(f"In noIn outFile is {outFilePtr}")
+    outputOfSwarm = Full_List(fout, outFilePtr, theseAlphas)[0]
     logger.info(outputOfSwarm)
 
     bestSpearm = outputOfSwarm[1]

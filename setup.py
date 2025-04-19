@@ -8,7 +8,7 @@ def parse_requirements():
 
 setup(
     name="ParticleChromo3D",
-    version="1.0.1",
+    version="1.0.2",
     description="3D chromosome structure reconstruction using ParticleChromo3D+",
     author="Oluwadare Lab",
     author_email="dvadnais@uccs.edu",
