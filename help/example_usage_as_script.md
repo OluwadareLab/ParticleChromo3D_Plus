@@ -5,7 +5,7 @@ This readme shows how the ParticleChromo3D can be used a script.
 `python ParticleChromo3D/Ps.py ${INPUT_MATRIX}`
 
 ## Get CLI options
-`python ParticleChromo3D/Ps.py --help
+`python ParticleChromo3D/Ps.py --help`
 
 # Convert to a square matrix 
 Example from file
