@@ -69,7 +69,7 @@ Ps.Write_Log(
 * configs: Python Dependencies <br />
 * exampleIfs: Synthetic and Real Hi-C datasets examples. <br />
 * ParticleChromo3D: Source Code and utility's used.<br />
-* help: Example scripts to help a user get started with our webserver. <br />
+* help: Example scripts to help a user get started with our tool. <br />
 * results: Output structures generated for all the experiments performed. <br />
 * website: front end code
 
