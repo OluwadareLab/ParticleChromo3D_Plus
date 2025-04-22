@@ -17,6 +17,6 @@ Example from file
 running `python ParticleChromo3D/TransformVCM.py -d " " test_mat.txt` yields 
 ```
 1.0	0.3	0.4
-0.3	1.0	0.5sdgf
+0.3	1.0	0.5
 0.4	0.5	1.0
 ```
