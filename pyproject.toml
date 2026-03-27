@@ -1,3 +1,29 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "ParticleChromo3D"
+version = "1.0.3"
+description = "3D chromosome structure reconstruction using ParticleChromo3D+"
+authors = [{ name = "Oluwadare Lab", email = "dvadnais@uccs.edu" }]
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "requests",
+    "Biopython",
+    "scipy",
+    "numpy",
+    "secure-smtplib",
+    "neo4j",
+]
+
+[tool.setuptools.packages.find]
+include = ["ParticleChromo3D*"]
+
+[project.urls]
+Homepage = "https://github.com/OluwadareLab/ParticleChromo3D_Plus"
