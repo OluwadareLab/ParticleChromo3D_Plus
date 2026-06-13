@@ -147,3 +147,13 @@ We use pytest in the root level for unit testing. Simply install pytest and run 
 Vadnais, David, and Oluwatosin Oluwadare. "ParticleChromo3D+: A Web Server for ParticleChromo3D Algorithm for 3D Chromosome Structure Reconstruction." Current Issues in Molecular Biology 45.3 (2023): 2549-2560.
 
 Vadnais, D., Middleton, M. & Oluwadare, O. ParticleChromo3D: a Particle Swarm Optimization algorithm for chromosome 3D structure prediction from Hi-C data. BioData Mining 15, 19 (2022). https://doi.org/10.1186/s13040-022-00305-x
+
+**9.    Rust:**
+-----------------------------------------------------------
+Rust support is explained in the readme in ParticleChromo3D_rust.
+
+TODO: 
+* Do a speed test comparison
+* Release a python package
+* Add workflows for testing rust build
+
