@@ -1,6 +1,9 @@
 **/out/**
 *.stripped
 .venv
+
+# Rust build artifacts
+ParticleChromo3D_rust/target/
 *.swp
 __pycache__/
 .vscode
