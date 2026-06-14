@@ -2,7 +2,25 @@
 
 Rust port of `ParticleChromo3D/Ps.py`. Runs the same PSO algorithm to reconstruct 3D chromosome structure from Hi-C contact matrices, with parallelism over the alpha sweep via Rayon.
 
-## Requirements
+## Install from crates.io
+
+```bash
+cargo install particle_chromo3d
+```
+
+Then run directly:
+
+```bash
+particle_chromo3d <input_matrix> [OPTIONS]
+```
+
+### Example
+
+```bash
+particle_chromo3d chr22_matrix.txt -s 15 -i 30000 -o ./out/chr22
+```
+
+## Requirements (build from source)
 
 - Rust 1.70+ (install via [rustup](https://rustup.rs/) or `conda install conda-forge::rust`)
 

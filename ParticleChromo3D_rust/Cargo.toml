@@ -2,6 +2,13 @@
 name = "particle_chromo3d"
 version = "0.1.0"
 edition = "2024"
+description = "CLI tool for 3D chromosome structure reconstruction from Hi-C contact matrices using Particle Swarm Optimization"
+license = "MIT"
+repository = "https://github.com/OluwadareLab/ParticleChromo3D_Plus"
+authors = ["David Vadnais <dvadnais@hawaii.edu>"]
+keywords = ["genomics", "hi-c", "chromosome", "pso", "bioinformatics"]
+categories = ["science", "command-line-utilities"]
+readme = "README.md"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }

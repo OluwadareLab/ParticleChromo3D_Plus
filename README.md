@@ -150,7 +150,7 @@ Vadnais, D., Middleton, M. & Oluwadare, O. ParticleChromo3D: a Particle Swarm Op
 
 **9.    Rust:**
 -----------------------------------------------------------
-Rust support is explained in the readme in ParticleChromo3D_rust.
+Rust support is explained in the readme in ParticleChromo3D_rust. [The package can be found here](https://crates.io/crates/particle_chromo3d)
 
 TODO: 
 * Do a speed test comparison
