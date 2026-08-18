@@ -47,7 +47,9 @@ pub fn pearsonr(x: &[f64], y: &[f64]) -> f64 {
     let num: f64 = x.iter().zip(y).map(|(a, b)| (a - mx) * (b - my)).sum();
     let dx: f64 = x.iter().map(|a| (a - mx).powi(2)).sum::<f64>().sqrt();
     let dy: f64 = y.iter().map(|b| (b - my).powi(2)).sum::<f64>().sqrt();
-    if dx == 0.0 || dy == 0.0 { return 0.0; }
+    if dx == 0.0 || dy == 0.0 {
+        return 0.0;
+    }
     num / (dx * dy)
 }
 
@@ -79,23 +81,40 @@ pub fn loss_function(target: &[f64], predicted: &[f64], func: LossFunc) -> f64 {
     let n = target.len() as f64;
     match func {
         LossFunc::Rmse => {
-            let sum: f64 = target.iter().zip(predicted).map(|(t, p)| (p - t).powi(2)).sum();
+            let sum: f64 = target
+                .iter()
+                .zip(predicted)
+                .map(|(t, p)| (p - t).powi(2))
+                .sum();
             (sum / n).sqrt()
         }
-        LossFunc::Sse => {
-            target.iter().zip(predicted).map(|(t, p)| (p - t).powi(2)).sum()
-        }
+        LossFunc::Sse => target
+            .iter()
+            .zip(predicted)
+            .map(|(t, p)| (p - t).powi(2))
+            .sum(),
         LossFunc::Mse => {
-            let sum: f64 = target.iter().zip(predicted).map(|(t, p)| (p - t).powi(2)).sum();
+            let sum: f64 = target
+                .iter()
+                .zip(predicted)
+                .map(|(t, p)| (p - t).powi(2))
+                .sum();
             sum / n
         }
         LossFunc::Huber => {
             let alpha = 0.5f64;
-            target.iter().zip(predicted).map(|(t, p)| {
-                let diff = (p - t).abs();
-                if diff < alpha { 0.5 * (p - t).powi(2) }
-                else { alpha * (diff - 0.5 * alpha) }
-            }).sum()
+            target
+                .iter()
+                .zip(predicted)
+                .map(|(t, p)| {
+                    let diff = (p - t).abs();
+                    if diff < alpha {
+                        0.5 * (p - t).powi(2)
+                    } else {
+                        alpha * (diff - 0.5 * alpha)
+                    }
+                })
+                .sum()
         }
     }
 }
@@ -177,38 +196,43 @@ impl Swarm {
     }
 
     fn rand_cur_static(rng: &mut impl Rng, pc: usize, min: f64, max: f64) -> Particle {
-        (0..pc).map(|_| {
-            [
-                rng.gen_range(min..=max),
-                rng.gen_range(min..=max),
-                rng.gen_range(min..=max),
-            ]
-        }).collect()
+        (0..pc)
+            .map(|_| {
+                [
+                    rng.gen_range(min..=max),
+                    rng.gen_range(min..=max),
+                    rng.gen_range(min..=max),
+                ]
+            })
+            .collect()
     }
 
     fn rand_cur(&self, rng: &mut impl Rng) -> Particle {
         Self::rand_cur_static(rng, self.pc, self.rand_min, self.rand_max)
     }
 
-    fn rand_shift(rng: &mut impl Rng, copy_pos: &Particle, cut_size: usize, threshold: f64) -> (Particle, Vec<bool>) {
+    fn rand_shift(
+        rng: &mut impl Rng,
+        copy_pos: &Particle,
+        cut_size: usize,
+        threshold: f64,
+    ) -> (Particle, Vec<bool>) {
         let mut temp = copy_pos.clone();
         let n = temp.len();
         let mut mask = vec![false; n];
 
         // create a boolean mask: cut_size falses, rest trues, then shuffle
-        for i in cut_size..n {
-            mask[i] = true;
-        }
+        mask.iter_mut().skip(cut_size).for_each(|m| *m = true);
         // Fisher-Yates shuffle on mask
         for i in (1..n).rev() {
             let j = rng.gen_range(0..=i);
             mask.swap(i, j);
         }
 
-        for i in 0..n {
-            if mask[i] {
-                for k in 0..3 {
-                    temp[i][k] += rng.gen_range(-threshold..=threshold);
+        for (bead, &shifted) in temp.iter_mut().zip(mask.iter()) {
+            if shifted {
+                for coord in bead.iter_mut() {
+                    *coord += rng.gen_range(-threshold..=threshold);
                 }
             }
         }
@@ -221,7 +245,9 @@ impl Swarm {
             if self.zero_ind.is_empty() {
                 self.dist[p] = full;
             } else {
-                self.dist[p] = full.into_iter().enumerate()
+                self.dist[p] = full
+                    .into_iter()
+                    .enumerate()
                     .filter(|(i, _)| !self.zero_ind.contains(i))
                     .map(|(_, v)| v)
                     .collect();
@@ -234,24 +260,41 @@ impl Swarm {
         let predicted = &self.dist[p];
         match self.loss_func {
             LossFunc::Rmse => {
-                let sum: f64 = target.iter().zip(predicted).map(|(t, d)| (d - t).powi(2)).sum();
+                let sum: f64 = target
+                    .iter()
+                    .zip(predicted)
+                    .map(|(t, d)| (d - t).powi(2))
+                    .sum();
                 sum.sqrt()
             }
-            LossFunc::Sse => {
-                target.iter().zip(predicted).map(|(t, d)| (d - t).powi(2)).sum()
-            }
+            LossFunc::Sse => target
+                .iter()
+                .zip(predicted)
+                .map(|(t, d)| (d - t).powi(2))
+                .sum(),
             LossFunc::Mse => {
                 let n = target.len() as f64;
-                let sum: f64 = target.iter().zip(predicted).map(|(t, d)| (d - t).powi(2)).sum();
+                let sum: f64 = target
+                    .iter()
+                    .zip(predicted)
+                    .map(|(t, d)| (d - t).powi(2))
+                    .sum();
                 (1.0 / self.pc as f64) * sum / n
             }
             LossFunc::Huber => {
                 let delta = 0.1f64;
-                target.iter().zip(predicted).map(|(t, d)| {
-                    let diff = (d - t).abs();
-                    if diff < delta { 0.5 * (d - t).powi(2) }
-                    else { delta * (diff - 0.5 * delta) }
-                }).sum()
+                target
+                    .iter()
+                    .zip(predicted)
+                    .map(|(t, d)| {
+                        let diff = (d - t).abs();
+                        if diff < delta {
+                            0.5 * (d - t).powi(2)
+                        } else {
+                            delta * (diff - 0.5 * delta)
+                        }
+                    })
+                    .sum()
             }
         }
     }
@@ -264,11 +307,11 @@ impl Swarm {
     }
 
     fn update_cost(&mut self, new_cost: Vec<f64>) {
-        for p in 0..self.pos.len() {
-            if new_cost[p] > self.cost[p] {
+        for (p, &cost) in new_cost.iter().enumerate() {
+            if cost > self.cost[p] {
                 self.loc_op_count[p] += 1.0;
             }
-            self.cost[p] = new_cost[p];
+            self.cost[p] = cost;
 
             if self.cost[p] < self.cost_best[p] {
                 self.pos_best[p] = self.pos[p].clone();
@@ -276,13 +319,16 @@ impl Swarm {
             }
         }
 
-        let best_p = self.cost.iter().enumerate()
+        let best_p = self
+            .cost
+            .iter()
+            .enumerate()
             .min_by(|a, b| a.1.partial_cmp(b.1).unwrap())
             .map(|(i, _)| i)
             .unwrap();
 
         let best_cost = self.cost[best_p];
-        let is_new_best = self.g_best.as_ref().map_or(true, |g| best_cost < g.1);
+        let is_new_best = self.g_best.as_ref().is_none_or(|g| best_cost < g.1);
         if is_new_best {
             self.g_best = Some((
                 self.pos[best_p].clone(),
@@ -305,13 +351,13 @@ impl Swarm {
         let mut rng = rand::thread_rng();
 
         for p in 0..self.pos.len() {
-            for b in 0..self.pc {
-                for k in 0..3 {
+            for (b, g_bead) in g_best_pos.iter().enumerate() {
+                for (k, &g_coord) in g_bead.iter().enumerate() {
                     let ran_p: f64 = rng.r#gen();
                     let ran_g: f64 = rng.r#gen();
                     self.vel[p][b][k] = weight * self.vel[p][b][k]
                         + con_p * ran_p * (self.pos_best[p][b][k] - self.pos[p][b][k])
-                        + con_g * ran_g * (g_best_pos[b][k] - self.pos[p][b][k]);
+                        + con_g * ran_g * (g_coord - self.pos[p][b][k]);
                 }
             }
         }
@@ -320,7 +366,11 @@ impl Swarm {
     pub fn update_pos(&mut self, itt: usize) {
         let mut rng = rand::thread_rng();
         let cut_size = rng.gen_range(1..self.pc.saturating_sub(1).max(2));
-        let thresh = if itt > 500 { (1.0 / itt as f64) * 100.0 } else { 1.0 };
+        let thresh = if itt > 500 {
+            (1.0 / itt as f64) * 100.0
+        } else {
+            1.0
+        };
         let const_val = Self::calc_const(10000.0, itt as f64, 5.0, 15.0);
 
         let changed: Vec<usize> = (0..self.pos.len())
@@ -331,10 +381,11 @@ impl Swarm {
             if itt < 1000 {
                 self.pos[p] = self.rand_cur(&mut rng);
             } else {
-                let (new_pos, mask) = Self::rand_shift(&mut rng, &self.pos[p].clone(), cut_size, thresh);
+                let (new_pos, mask) =
+                    Self::rand_shift(&mut rng, &self.pos[p].clone(), cut_size, thresh);
                 self.pos[p] = new_pos;
-                for b in 0..self.pc {
-                    if mask[b] {
+                for (b, &shifted) in mask.iter().enumerate() {
+                    if shifted {
                         self.vel[p][b] = [0.0; 3];
                     }
                 }
@@ -442,7 +493,12 @@ mod tests {
     #[test]
     fn loss_function_is_zero_for_an_exact_match() {
         let v = [1.0, 2.0, 3.0];
-        for func in [LossFunc::Sse, LossFunc::Mse, LossFunc::Rmse, LossFunc::Huber] {
+        for func in [
+            LossFunc::Sse,
+            LossFunc::Mse,
+            LossFunc::Rmse,
+            LossFunc::Huber,
+        ] {
             assert_close(loss_function(&v, &v, func), 0.0);
         }
     }
@@ -454,14 +510,20 @@ mod tests {
 
         assert_close(loss_function(&target, &predicted, LossFunc::Sse), 10.0);
         assert_close(loss_function(&target, &predicted, LossFunc::Mse), 5.0);
-        assert_close(loss_function(&target, &predicted, LossFunc::Rmse), 5f64.sqrt());
+        assert_close(
+            loss_function(&target, &predicted, LossFunc::Rmse),
+            5f64.sqrt(),
+        );
     }
 
     #[test]
     fn loss_function_huber_switches_from_quadratic_to_linear_at_alpha() {
         assert_close(loss_function(&[0.0], &[0.2], LossFunc::Huber), 0.02);
         assert_close(loss_function(&[0.0], &[3.0], LossFunc::Huber), 1.375);
-        assert_close(loss_function(&[0.0, 0.0], &[1.0, 3.0], LossFunc::Huber), 1.75);
+        assert_close(
+            loss_function(&[0.0, 0.0], &[1.0, 3.0], LossFunc::Huber),
+            1.75,
+        );
     }
 
     #[test]
@@ -634,10 +696,10 @@ mod tests {
         swarm.update_pos(0);
 
         for p in 0..swarm.pos.len() {
-            for b in 0..3 {
-                assert_close(swarm.pos[p][b][0], start[b][0] + 0.5);
-                assert_close(swarm.pos[p][b][1], start[b][1] - 0.5);
-                assert_close(swarm.pos[p][b][2], start[b][2] + 1.0);
+            for (b, origin) in start.iter().enumerate() {
+                assert_close(swarm.pos[p][b][0], origin[0] + 0.5);
+                assert_close(swarm.pos[p][b][1], origin[1] - 0.5);
+                assert_close(swarm.pos[p][b][2], origin[2] + 1.0);
             }
         }
     }
@@ -654,7 +716,10 @@ mod tests {
         assert_eq!(swarm.vel[0], vec![[0.0; 3]; 3]);
         for bead in &swarm.pos[0] {
             for &v in bead {
-                assert!((-1.0..=1.0).contains(&v), "restarted coordinate {v} out of range");
+                assert!(
+                    (-1.0..=1.0).contains(&v),
+                    "restarted coordinate {v} out of range"
+                );
             }
         }
         assert_close(swarm.loc_op_count[1], 0.0);
@@ -670,12 +735,18 @@ mod tests {
         let (shifted, mask) = Swarm::rand_shift(&mut rng, &original, cut_size, threshold);
 
         assert_eq!(shifted.len(), original.len());
-        assert_eq!(mask.iter().filter(|&&m| m).count(), original.len() - cut_size);
+        assert_eq!(
+            mask.iter().filter(|&&m| m).count(),
+            original.len() - cut_size
+        );
         for i in 0..original.len() {
             for k in 0..3 {
                 let delta = shifted[i][k] - original[i][k];
                 if mask[i] {
-                    assert!(delta.abs() <= threshold + EPS, "delta {delta} exceeds threshold");
+                    assert!(
+                        delta.abs() <= threshold + EPS,
+                        "delta {delta} exceeds threshold"
+                    );
                 } else {
                     assert_close(delta, 0.0);
                 }
