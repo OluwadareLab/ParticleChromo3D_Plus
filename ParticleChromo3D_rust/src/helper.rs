@@ -65,11 +65,6 @@ pub fn read_matrix_to_list(file_ptr: &str) -> (Vec<[f64; 3]>, Vec<usize>) {
         }
     }
 
-    let zero_ind = if zero_ind.is_empty() {
-        vec![]
-    } else {
-        zero_ind
-    };
     (contact_list, zero_ind)
 }
 
