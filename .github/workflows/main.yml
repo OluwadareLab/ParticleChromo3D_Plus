@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag particlechromo3d:$(date +%s) --tag particlechromo3d:latest
@@ -19,7 +19,7 @@ jobs:
       run: docker image save particlechromo3d:latest -o particlechromo3d_image.tar.gz
 
     - name: Upload docker image as artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: particlechromo3d_image
         path: particlechromo3d_image.tar.gz
