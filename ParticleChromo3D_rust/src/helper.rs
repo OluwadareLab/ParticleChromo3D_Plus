@@ -170,3 +170,181 @@ pub fn write_log(outfile: &str, in_file: &str, best_alpha: f64, rmse: f64, best_
     );
     fs::write(outfile, content).expect("Failed to write log");
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::tempdir;
+
+    const EPS: f64 = 1e-9;
+
+    fn write_fixture(dir: &Path, name: &str, body: &str) -> String {
+        let path = dir.join(name);
+        fs::write(&path, body).unwrap();
+        path.to_str().unwrap().to_string()
+    }
+
+    fn sorted(mut values: Vec<f64>) -> Vec<f64> {
+        values.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        values
+    }
+
+    #[test]
+    fn read_matrix_to_list_keeps_upper_triangle_and_records_zero_pairs() {
+        let dir = tempdir().unwrap();
+        let file = write_fixture(dir.path(), "m.txt", "0 1 2\n1 0 0\n2 0 0\n");
+
+        let (contacts, zero_ind) = read_matrix_to_list(&file);
+
+        assert_eq!(contacts, vec![[0.0, 1.0, 1.0], [0.0, 2.0, 2.0]]);
+        assert_eq!(zero_ind, vec![2]);
+    }
+
+    #[test]
+    fn read_matrix_to_list_drops_all_zero_rows_and_columns() {
+        let dir = tempdir().unwrap();
+        let file = write_fixture(dir.path(), "m.txt", "0 1 0\n1 0 0\n0 0 0\n");
+
+        let (contacts, zero_ind) = read_matrix_to_list(&file);
+
+        assert_eq!(contacts, vec![[0.0, 1.0, 1.0]]);
+        assert!(zero_ind.is_empty());
+    }
+
+    #[test]
+    fn read_matrix_to_list_returns_nothing_for_an_all_zero_matrix() {
+        let dir = tempdir().unwrap();
+        let file = write_fixture(dir.path(), "m.txt", "0 0\n0 0\n");
+
+        let (contacts, zero_ind) = read_matrix_to_list(&file);
+
+        assert!(contacts.is_empty());
+        assert!(zero_ind.is_empty());
+    }
+
+    #[test]
+    fn read_matrix_to_list_ignores_blank_lines_and_unparsable_values() {
+        let dir = tempdir().unwrap();
+        let file = write_fixture(dir.path(), "m.txt", "0 1\n\n1 NA\n");
+
+        let (contacts, zero_ind) = read_matrix_to_list(&file);
+
+        assert_eq!(contacts, vec![[0.0, 1.0, 1.0]]);
+        assert!(zero_ind.is_empty());
+    }
+
+    #[test]
+    fn read_data_remaps_contacts_onto_a_compact_index_range() {
+        let dir = tempdir().unwrap();
+        let file = write_fixture(dir.path(), "m.txt", "0 1 2\n1 0 0\n2 0 0\n");
+
+        let (contacts, point_map, zero_ind) = read_data(&file);
+
+        assert_eq!(point_map.len(), 3);
+        let mut compact: Vec<usize> = point_map.values().copied().collect();
+        compact.sort_unstable();
+        assert_eq!(compact, vec![0, 1, 2]);
+
+        for c in &contacts {
+            assert!((c[0] as usize) < 3);
+            assert!((c[1] as usize) < 3);
+            assert_ne!(c[0], c[1]);
+        }
+        assert_eq!(
+            sorted(contacts.iter().map(|c| c[2]).collect()),
+            vec![1.0, 2.0]
+        );
+        assert_eq!(zero_ind, vec![2]);
+    }
+
+    #[test]
+    fn strip_file_collapses_whitespace_into_single_spaces() {
+        let dir = tempdir().unwrap();
+        let file = write_fixture(dir.path(), "ragged.txt", "1\t\t2   3\n  4 5\t6  \n");
+
+        let out = strip_file(&file);
+
+        assert_eq!(out, format!("{}.stripped", file));
+        assert_eq!(fs::read_to_string(&out).unwrap(), "1 2 3\n4 5 6\n");
+    }
+
+    #[test]
+    fn scale_arr_maps_the_global_extremes_onto_the_requested_bounds() {
+        let mut xyz = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
+
+        scale_arr(&mut xyz, -10.0, 10.0);
+
+        assert_eq!(xyz, vec![[-10.0, -10.0, -10.0], [10.0, 10.0, 10.0]]);
+    }
+
+    #[test]
+    fn scale_arr_preserves_relative_spacing() {
+        let mut xyz = vec![[0.0, 1.0, 2.0], [3.0, 4.0, 4.0]];
+
+        scale_arr(&mut xyz, 0.0, 1.0);
+
+        assert!((xyz[0][0] - 0.0).abs() < EPS);
+        assert!((xyz[0][1] - 0.25).abs() < EPS);
+        assert!((xyz[0][2] - 0.5).abs() < EPS);
+        assert!((xyz[1][0] - 0.75).abs() < EPS);
+        assert!((xyz[1][1] - 1.0).abs() < EPS);
+    }
+
+    #[test]
+    fn write_pdb_emits_one_atom_per_bead_plus_conect_and_end_records() {
+        let dir = tempdir().unwrap();
+        let out = dir.path().join("chr.pdb");
+        let positions = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]];
+
+        write_pdb(&positions, out.to_str().unwrap());
+
+        let text = fs::read_to_string(&out).unwrap();
+        assert_eq!(text.lines().filter(|l| l.starts_with("ATOM")).count(), 3);
+        assert_eq!(text.lines().filter(|l| l.starts_with("CONECT")).count(), 3);
+        assert_eq!(text.lines().last().unwrap(), "END");
+        assert!(text.contains("   1.000   2.000   3.000"));
+    }
+
+    #[test]
+    fn write_output_scales_coordinates_into_the_pdb_range() {
+        let dir = tempdir().unwrap();
+        let base = dir.path().join("chr");
+        let positions = [[0.0, 0.0, 0.0], [1.0, 2.0, 3.0], [4.0, 4.0, 4.0]];
+
+        write_output(base.to_str().unwrap(), &positions);
+
+        let text = fs::read_to_string(format!("{}.pdb", base.to_str().unwrap())).unwrap();
+        let coords: Vec<f64> = text
+            .lines()
+            .filter(|l| l.starts_with("ATOM"))
+            .flat_map(|l| {
+                let t: Vec<&str> = l.split_whitespace().collect();
+                let n = t.len();
+                [t[n - 5], t[n - 4], t[n - 3]]
+                    .map(|v| v.parse::<f64>().unwrap())
+                    .to_vec()
+            })
+            .collect();
+
+        assert_eq!(coords.len(), 9);
+        let lo = coords.iter().copied().fold(f64::INFINITY, f64::min);
+        let hi = coords.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+        assert!((lo + 10.0).abs() < 1e-3);
+        assert!((hi - 10.0).abs() < 1e-3);
+    }
+
+    #[test]
+    fn write_log_records_the_input_file_and_every_metric() {
+        let dir = tempdir().unwrap();
+        let out = dir.path().join("run.log");
+
+        write_log(out.to_str().unwrap(), "chr21.txt", 0.3, 1.25, 0.91, 0.87);
+
+        let text = fs::read_to_string(&out).unwrap();
+        assert!(text.contains("Input file: chr21.txt"));
+        assert!(text.contains("Convert factor:: 0.3"));
+        assert!(text.contains("Best cost  : 1.25"));
+        assert!(text.contains("Spearman correlation Dist vs. Reconstructed Dist  : 0.91"));
+        assert!(text.contains("Pearson correlation Dist vs. Reconstructed Dist  : 0.87"));
+    }
+}
