@@ -27,7 +27,7 @@ impl LossFunc {
 /// Compute pairwise euclidean distances (upper triangle, row-major order)
 pub fn pdist(positions: &[[f64; 3]]) -> Vec<f64> {
     let n = positions.len();
-    let mut dists = Vec::with_capacity(n * (n - 1) / 2);
+    let mut dists = Vec::with_capacity(n * n.saturating_sub(1) / 2);
     for i in 0..n {
         for j in (i + 1)..n {
             let dx = positions[i][0] - positions[j][0];
@@ -462,6 +462,11 @@ mod tests {
     #[test]
     fn pdist_of_a_single_point_is_empty() {
         assert!(pdist(&[[1.0, 2.0, 3.0]]).is_empty());
+    }
+
+    #[test]
+    fn pdist_of_no_points_is_empty() {
+        assert!(pdist(&[]).is_empty());
     }
 
     #[test]
