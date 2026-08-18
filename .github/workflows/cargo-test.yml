@@ -1,0 +1,44 @@
+name: Run Cargo Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+defaults:
+  run:
+    working-directory: ParticleChromo3D_rust
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust-version: ['stable', 'beta']
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Rust ${{ matrix.rust-version }}
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: ${{ matrix.rust-version }}
+
+    - name: Cache cargo registry and build output
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ParticleChromo3D_rust/target
+        key: ${{ runner.os }}-cargo-${{ matrix.rust-version }}-${{ hashFiles('ParticleChromo3D_rust/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-${{ matrix.rust-version }}-
+
+    - name: Build
+      run: cargo build --verbose
+
+    - name: Run cargo test
+      run: cargo test --verbose
