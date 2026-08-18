@@ -20,9 +20,39 @@ particle_chromo3d <input_matrix> [OPTIONS]
 particle_chromo3d chr22_matrix.txt -s 15 -i 30000 -o ./out/chr22
 ```
 
+## Use as a library
+
+```bash
+cargo add particle_chromo3d --no-default-features
+```
+
+`--no-default-features` drops the CLI-only dependencies (`clap`, `env_logger`, `uuid`),
+leaving just `log`, `rand`, and `rayon`.
+
+```rust
+use particle_chromo3d::swarm::LossFunc;
+use particle_chromo3d::{PsoParams, alpha_grid, par_choice};
+
+let params = PsoParams {
+    rand_range: 1.0,
+    swarm_size: 15,
+    threshold: 1e-6,
+    itt_count: 30000,
+    loss_func: LossFunc::Rmse,
+};
+let alphas = alpha_grid(0.1, 2.0, 0.1);
+let best = par_choice("chr22_matrix.txt", "./out/chr22", &alphas, params);
+
+println!("spearman {} at alpha {}", best.spearman, alphas[best.alpha_idx]);
+```
+
+Lower-level pieces are available too: `helper` for matrix and PDB I/O, and `swarm`
+for the `Swarm` type and the `pdist` / `pearsonr` / `spearmanr` / `loss_function`
+primitives but frankly I dont see many use cases for these.
+
 ## Requirements (build from source)
 
-- Rust 1.70+ (install via [rustup](https://rustup.rs/) or `conda install conda-forge::rust`)
+- Rust 1.88+ (install via [rustup](https://rustup.rs/) or `conda install conda-forge::rust`)
 
 ## Build
 

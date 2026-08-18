@@ -11,13 +11,20 @@ categories = ["science", "command-line-utilities"]
 readme = "README.md"
 
 [dependencies]
-clap = { version = "4", features = ["derive"] }
-ndarray = "0.16"
+clap = { version = "4", features = ["derive"], optional = true }
 rand = "0.8"
 rayon = "1"
 log = "0.4"
-env_logger = "0.11"
-uuid = { version = "1", features = ["v4"] }
+env_logger = { version = "0.11", optional = true }
+uuid = { version = "1", features = ["v4"], optional = true }
+
+[features]
+default = ["cli"]
+cli = ["dep:clap", "dep:env_logger", "dep:uuid"]
+
+[[bin]]
+name = "particle_chromo3d"
+required-features = ["cli"]
 
 [dev-dependencies]
 tempfile = "3"
