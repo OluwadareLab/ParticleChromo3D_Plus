@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::{Rng, RngExt};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 static SWARM_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
@@ -158,7 +158,7 @@ impl Swarm {
         let rand_max = rand_val;
         let rand_min = -rand_val;
 
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
         let pos: Vec<Particle> = (0..swarm_size)
             .map(|_| Self::rand_cur_static(&mut rng, point_count, rand_min, rand_max))
             .collect();
@@ -199,9 +199,9 @@ impl Swarm {
         (0..pc)
             .map(|_| {
                 [
-                    rng.gen_range(min..=max),
-                    rng.gen_range(min..=max),
-                    rng.gen_range(min..=max),
+                    rng.random_range(min..=max),
+                    rng.random_range(min..=max),
+                    rng.random_range(min..=max),
                 ]
             })
             .collect()
@@ -225,14 +225,14 @@ impl Swarm {
         mask.iter_mut().skip(cut_size).for_each(|m| *m = true);
         // Fisher-Yates shuffle on mask
         for i in (1..n).rev() {
-            let j = rng.gen_range(0..=i);
+            let j = rng.random_range(0..=i);
             mask.swap(i, j);
         }
 
         for (bead, &shifted) in temp.iter_mut().zip(mask.iter()) {
             if shifted {
                 for coord in bead.iter_mut() {
-                    *coord += rng.gen_range(-threshold..=threshold);
+                    *coord += rng.random_range(-threshold..=threshold);
                 }
             }
         }
@@ -348,13 +348,13 @@ impl Swarm {
         let con_p = 0.3f64;
         let con_g = 2.5f64;
         let g_best_pos = self.g_best.as_ref().unwrap().0.clone();
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
 
         for p in 0..self.pos.len() {
             for (b, g_bead) in g_best_pos.iter().enumerate() {
                 for (k, &g_coord) in g_bead.iter().enumerate() {
-                    let ran_p: f64 = rng.r#gen();
-                    let ran_g: f64 = rng.r#gen();
+                    let ran_p: f64 = rng.random();
+                    let ran_g: f64 = rng.random();
                     self.vel[p][b][k] = weight * self.vel[p][b][k]
                         + con_p * ran_p * (self.pos_best[p][b][k] - self.pos[p][b][k])
                         + con_g * ran_g * (g_coord - self.pos[p][b][k]);
@@ -364,8 +364,8 @@ impl Swarm {
     }
 
     pub fn update_pos(&mut self, itt: usize) {
-        let mut rng = rand::thread_rng();
-        let cut_size = rng.gen_range(1..self.pc.saturating_sub(1).max(2));
+        let mut rng = rand::rng();
+        let cut_size = rng.random_range(1..self.pc.saturating_sub(1).max(2));
         let thresh = if itt > 500 {
             (1.0 / itt as f64) * 100.0
         } else {
@@ -732,7 +732,7 @@ mod tests {
 
     #[test]
     fn rand_shift_perturbs_exactly_the_masked_beads_within_the_threshold() {
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
         let original: Vec<[f64; 3]> = (0..10).map(|i| [i as f64, 0.0, -(i as f64)]).collect();
         let cut_size = 4;
         let threshold = 0.25;
