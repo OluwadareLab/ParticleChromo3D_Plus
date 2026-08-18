@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ParticleChromo3D"
-version = "1.0.3"
+version = "1.0.4"
 description = "3D chromosome structure reconstruction using ParticleChromo3D+"
 authors = [{ name = "Oluwadare Lab", email = "dvadnais@uccs.edu" }]
 readme = "README.md"
