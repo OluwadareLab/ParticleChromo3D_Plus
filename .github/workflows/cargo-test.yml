@@ -42,3 +42,32 @@ jobs:
 
     - name: Run cargo test
       run: cargo test --verbose
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Rust stable with rustfmt and clippy
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+
+    - name: Cache cargo registry and build output
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ParticleChromo3D_rust/target
+        key: ${{ runner.os }}-cargo-lint-${{ hashFiles('ParticleChromo3D_rust/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-lint-
+
+    - name: Check formatting
+      run: cargo fmt --check
+
+    - name: Run clippy
+      run: cargo clippy --all-targets -- -D warnings

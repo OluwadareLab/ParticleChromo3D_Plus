@@ -28,21 +28,15 @@ pub fn read_matrix_to_list(file_ptr: &str) -> (Vec<[f64; 3]>, Vec<usize>) {
         return (vec![], vec![]);
     }
 
-    let n_rows = matrix.len();
     let n_cols = matrix[0].len();
 
     // Find all-zero columns
-    let mut zero_cols: Vec<usize> = vec![];
-    for col in 0..n_cols {
-        if (0..n_rows).all(|row| matrix[row][col] == 0.0) {
-            zero_cols.push(col);
-        }
-    }
+    let zero_cols: Vec<usize> = (0..n_cols)
+        .filter(|&col| matrix.iter().all(|row| row[col] == 0.0))
+        .collect();
 
     // Remove zero columns
-    let keep_cols: Vec<usize> = (0..n_cols)
-        .filter(|c| !zero_cols.contains(c))
-        .collect();
+    let keep_cols: Vec<usize> = (0..n_cols).filter(|c| !zero_cols.contains(c)).collect();
 
     let matrix: Vec<Vec<f64>> = matrix
         .iter()
@@ -56,13 +50,13 @@ pub fn read_matrix_to_list(file_ptr: &str) -> (Vec<[f64; 3]>, Vec<usize>) {
     let mut zero_ind: Vec<usize> = vec![];
     let mut count = 0usize;
 
-    for i in 0..n {
-        for j in 0..matrix[i].len() {
+    for (i, row) in matrix.iter().enumerate().take(n) {
+        for (j, &value) in row.iter().enumerate() {
             if i != j && !stop_dupe.contains(&(i, j)) && !stop_dupe.contains(&(j, i)) {
                 stop_dupe.insert((i, j));
                 stop_dupe.insert((j, i));
-                if matrix[i][j] > 0.0 {
-                    contact_list.push([i as f64, j as f64, matrix[i][j]]);
+                if value > 0.0 {
+                    contact_list.push([i as f64, j as f64, value]);
                 } else {
                     zero_ind.push(count);
                 }
@@ -71,7 +65,11 @@ pub fn read_matrix_to_list(file_ptr: &str) -> (Vec<[f64; 3]>, Vec<usize>) {
         }
     }
 
-    let zero_ind = if zero_ind.is_empty() { vec![] } else { zero_ind };
+    let zero_ind = if zero_ind.is_empty() {
+        vec![]
+    } else {
+        zero_ind
+    };
     (contact_list, zero_ind)
 }
 
@@ -113,9 +111,15 @@ pub fn strip_file(in_file: &str) -> String {
 }
 
 /// Scales xyz array to [min_val, max_val]
-pub fn scale_arr(xyz: &mut Vec<[f64; 3]>, min_val: f64, max_val: f64) {
-    let flat_min = xyz.iter().flat_map(|p| p.iter().copied()).fold(f64::INFINITY, f64::min);
-    let flat_max = xyz.iter().flat_map(|p| p.iter().copied()).fold(f64::NEG_INFINITY, f64::max);
+pub fn scale_arr(xyz: &mut [[f64; 3]], min_val: f64, max_val: f64) {
+    let flat_min = xyz
+        .iter()
+        .flat_map(|p| p.iter().copied())
+        .fold(f64::INFINITY, f64::min);
+    let flat_max = xyz
+        .iter()
+        .flat_map(|p| p.iter().copied())
+        .fold(f64::NEG_INFINITY, f64::max);
     let old_range = flat_max - flat_min;
     let new_range = max_val - min_val;
     for p in xyz.iter_mut() {
@@ -144,7 +148,12 @@ pub fn write_pdb(positions: &[[f64; 3]], pdb_file: &str) {
         let col6 = format!("{:>8.3}", pos[1]);
         let col7 = format!("{:>8.3}", pos[2]);
         let col8 = "0.20 10.00";
-        writeln!(f, "{}  {}   {} {}   {}{}{}  {}", col1, col2, col3, col4, col5, col6, col7, col8).unwrap();
+        writeln!(
+            f,
+            "{}  {}   {} {}   {}{}{}  {}",
+            col1, col2, col3, col4, col5, col6, col7, col8
+        )
+        .unwrap();
     }
 
     for i in 1..=bin_num {
@@ -163,7 +172,14 @@ pub fn write_output(file_ptr: &str, xyz: &[[f64; 3]]) {
 }
 
 /// Writes a summary log file
-pub fn write_log(outfile: &str, in_file: &str, best_alpha: f64, rmse: f64, best_spearman: f64, best_pearson: f64) {
+pub fn write_log(
+    outfile: &str,
+    in_file: &str,
+    best_alpha: f64,
+    rmse: f64,
+    best_spearman: f64,
+    best_pearson: f64,
+) {
     let content = format!(
         "Input file: {}\nConvert factor:: {}\nBest cost  : {}\nBest Spearman correlation Dist vs. Reconstructed Dist  : {}\nBest Pearson correlation Dist vs. Reconstructed Dist  : {}\n",
         in_file, best_alpha, rmse, best_spearman, best_pearson

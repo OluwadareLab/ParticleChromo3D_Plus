@@ -4,7 +4,7 @@ mod swarm;
 use clap::Parser;
 use log::{debug, info};
 use rayon::prelude::*;
-use swarm::{loss_function, pearsonr, spearmanr, LossFunc, Swarm};
+use swarm::{LossFunc, Swarm, loss_function, pearsonr, spearmanr};
 use uuid::Uuid;
 
 #[derive(Parser, Debug)]
@@ -42,6 +42,15 @@ struct Args {
     log_level: String,
 }
 
+#[derive(Clone, Copy)]
+struct PsoParams {
+    rand_range: f64,
+    swarm_size: usize,
+    threshold: f64,
+    itt_count: usize,
+    loss_func: LossFunc,
+}
+
 struct OptResult {
     pearson: f64,
     spearman: f64,
@@ -54,95 +63,78 @@ struct OptResult {
     alpha_idx: usize,
 }
 
-fn one_move(
-    itt_count: usize,
-    swarm: &mut Swarm,
-    target: &[f64],
-    threshold: f64,
-    loss_func: LossFunc,
-) -> usize {
+fn one_move(swarm: &mut Swarm, target: &[f64], params: PsoParams) -> usize {
     let mut save_g_best_cost = f64::INFINITY;
 
-    for i in 0..itt_count {
-        if i % 1000 == 0 {
-            if let Some(ref g) = swarm.g_best {
-                let error = loss_function(target, &g.2, loss_func);
-                debug!(
-                    "id: {} itt: {} Cost: {} Pearson: {} Spearman: {}",
-                    swarm.id,
-                    i,
-                    g.1,
-                    pearsonr(&g.2, target),
-                    spearmanr(&g.2, target),
-                );
+    for i in 0..params.itt_count {
+        if i % 1000 == 0
+            && let Some(ref g) = swarm.g_best
+        {
+            let error = loss_function(target, &g.2, params.loss_func);
+            debug!(
+                "id: {} itt: {} Cost: {} Pearson: {} Spearman: {}",
+                swarm.id,
+                i,
+                g.1,
+                pearsonr(&g.2, target),
+                spearmanr(&g.2, target),
+            );
 
-                if (save_g_best_cost - error).abs() >= threshold {
-                    save_g_best_cost = error;
-                } else {
-                    return i;
-                }
+            if (save_g_best_cost - error).abs() >= params.threshold {
+                save_g_best_cost = error;
+            } else {
+                return i;
             }
         }
 
-        swarm.calc_vel(itt_count, i);
+        swarm.calc_vel(params.itt_count, i);
         swarm.update_pos(i);
         swarm.calc_cost();
     }
 
-    itt_count - 1
+    params.itt_count - 1
 }
 
 fn optimize(
     contacts_with_dist: Vec<[f64; 4]>,
     point_count: usize,
     zero_ind: Vec<usize>,
-    rand_range: f64,
-    swarm_size: usize,
-    threshold: f64,
-    itt_count: usize,
-    loss_func: LossFunc,
+    params: PsoParams,
     alpha_idx: usize,
 ) -> OptResult {
     let target: Vec<f64> = contacts_with_dist.iter().map(|c| c[3]).collect();
 
-    let mut swarm = Swarm::new(contacts_with_dist, point_count, rand_range, swarm_size, zero_ind);
-    swarm.loss_func = loss_func;
+    let mut swarm = Swarm::new(
+        contacts_with_dist,
+        point_count,
+        params.rand_range,
+        params.swarm_size,
+        zero_ind,
+    );
+    swarm.loss_func = params.loss_func;
 
-    let itt_fin = one_move(itt_count, &mut swarm, &target, threshold, loss_func);
+    let itt_fin = one_move(&mut swarm, &target, params);
 
     let g = swarm.g_best.as_ref().unwrap();
     let pearson = pearsonr(&g.2, &target);
     let spearman = spearmanr(&g.2, &target);
-    let cost = loss_function(&target, &g.2, loss_func);
+    let cost = loss_function(&target, &g.2, params.loss_func);
     let swarm_id = swarm.id;
 
-    OptResult { pearson, spearman, cost, itt_fin, swarm_id, swarm, alpha_idx }
+    OptResult {
+        pearson,
+        spearman,
+        cost,
+        itt_fin,
+        swarm_id,
+        swarm,
+        alpha_idx,
+    }
 }
 
-fn par_choice(
-    file_ptr: &str,
-    out_file_ptr: &str,
-    alpha_start: f64,
-    alpha_end: f64,
-    alpha_step: f64,
-    rand_range: f64,
-    swarm_size: usize,
-    threshold: f64,
-    itt_count: usize,
-    loss_func: LossFunc,
-) -> OptResult {
+fn par_choice(file_ptr: &str, out_file_ptr: &str, alphas: &[f64], params: PsoParams) -> OptResult {
     let (contacts, point_map, zero_ind) = helper::read_data(file_ptr);
     let point_count = point_map.len();
-
-    let alphas: Vec<f64> = {
-        let mut v = vec![];
-        let mut a = alpha_start;
-        while a < alpha_end - 1e-9 {
-            v.push(a);
-            a += alpha_step;
-        }
-        v
-    };
 
     info!(
         "Running PSO over {} alpha values with {} threads",
@@ -159,17 +151,7 @@ fn par_choice(
                 .map(|c| [c[0], c[1], c[2], 1.0 / c[2].powf(alpha)])
                 .collect();
 
-            optimize(
-                contacts_4,
-                point_count,
-                zero_ind.clone(),
-                rand_range,
-                swarm_size,
-                threshold,
-                itt_count,
-                loss_func,
-                idx,
-            )
+            optimize(contacts_4, point_count, zero_ind.clone(), params, idx)
         })
         .collect();
 
@@ -211,19 +193,6 @@ fn main() {
     let alpha_end = 2.0f64;
     let alpha_step = 0.1f64;
 
-    let best = par_choice(
-        &stripped,
-        &out_file_ptr,
-        alpha_start,
-        alpha_end,
-        alpha_step,
-        args.rand_range,
-        args.swarm_size,
-        args.threshold,
-        args.itt_count,
-        loss_func,
-    );
-
     let alphas: Vec<f64> = {
         let mut v = vec![];
         let mut a = alpha_start;
@@ -233,6 +202,17 @@ fn main() {
         }
         v
     };
+
+    let params = PsoParams {
+        rand_range: args.rand_range,
+        swarm_size: args.swarm_size,
+        threshold: args.threshold,
+        itt_count: args.itt_count,
+        loss_func,
+    };
+
+    let best = par_choice(&stripped, &out_file_ptr, &alphas, params);
+
     let best_alpha = alphas[best.alpha_idx];
 
     info!("Input file: {}", args.infile);
