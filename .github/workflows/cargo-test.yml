@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Set up Rust ${{ matrix.rust-version }}
       uses: dtolnay/rust-toolchain@master
@@ -27,7 +27,7 @@ jobs:
         toolchain: ${{ matrix.rust-version }}
 
     - name: Cache cargo registry and build output
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: |
           ~/.cargo/registry
@@ -51,7 +51,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Set up Rust stable with rustfmt and clippy
       uses: dtolnay/rust-toolchain@stable
@@ -59,7 +59,7 @@ jobs:
         components: rustfmt, clippy
 
     - name: Cache cargo registry and build output
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: |
           ~/.cargo/registry
