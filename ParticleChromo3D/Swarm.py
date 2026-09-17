@@ -72,7 +72,7 @@ class Swarm:
 
         self.dist = np.zeros((self.pos.shape[0],self.ref.shape[0])) # Distance of each particle
 
-        self.locOpCount = np.zeros((self.pos.shape[0],1)) # Used to check if a particle is not changing after a certain amount of itterations
+        self.locOpCount = np.zeros((self.pos.shape[0],1)) # Used to check if a particle is not changing after a certain amount of iterations
 
         self.Cost() # Gets first cost calculations
 
@@ -239,8 +239,8 @@ class Swarm:
         Function that calculates a constant value
 
         Args:
-            ittMax: maximum number of itterations
-            k: current itterations
+            ittMax: maximum number of iterations
+            k: current iterations
             W_MIN: constant min
             W_MAX: constant max
         '''

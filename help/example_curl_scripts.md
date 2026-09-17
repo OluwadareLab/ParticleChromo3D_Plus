@@ -9,7 +9,7 @@ This readme shows how the backend api of ParticleChromo3D+ could be accessed cia
 `curl -X GET "http://biomlearn.uccs.edu:5001/process?ifname=chr18_matrix.txt&ss=15&itt=30000&threshold=0.000001&randRange=1.0&lf=2&outFile=chr.pdb&email=${EMAIL}"`
 
 # Additional endpoints
-## List avalable files
+## List available files
 `curl -X GET http://biomlearn.uccs.edu:5001/uploaded`
 
 ## Download specific file

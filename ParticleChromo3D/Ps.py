@@ -155,7 +155,7 @@ def Optimize(
     )
 
 
-# Runs in paralel if passed multiple rangeSpace
+# Runs in parallel if passed multiple rangeSpace
 def Par_Choice(inFilePtr, outFilePtr, alpha, randRange, swarmSize, threshold, ittCount, lossFunctionChoice):
     contact, points, zeroInd = Helper.Read_Data(inFilePtr, alpha)
 
@@ -258,14 +258,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "-itt",
         "--ittCount",
-        help="Maximum itterations before stop [Default 30000]",
+        help="Maximum iterations before stop [Default 30000]",
         type=int,
         default=30000,
     )
     parser.add_argument(
         "-t",
         "--threshold",
-        help="Error threshold before stoping [Default 0.000001]",
+        help="Error threshold before stopping [Default 0.000001]",
         type=float,
         default=0.000001,
     )
@@ -337,7 +337,7 @@ if __name__ == "__main__":
     if len(rangeSpace) > 2 and (rangeSpace[0] == rangeSpace[1]):
         rangeSpace.pop()
 
-    logger.info(f"proccessing file : {inFilePtr}")
+    logger.info(f"processing file : {inFilePtr}")
 
     fout = strip_file(inFilePtr)
 

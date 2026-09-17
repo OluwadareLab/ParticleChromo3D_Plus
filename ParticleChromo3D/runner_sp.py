@@ -70,7 +70,7 @@ def home():
   else:
     _ = subprocess.Popen(thecmd, shell=True, stdout=subprocess.PIPE, 
                      stderr=subprocess.PIPE)
-    return "Processing has begun. You will recieve an email upon its completion."  
+    return "Processing has begun. You will receive an email upon its completion."  
     #return subprocess.check_output(thecmd, shell=True) # uncomment this to debug the python
 
 @app.route("/neo")

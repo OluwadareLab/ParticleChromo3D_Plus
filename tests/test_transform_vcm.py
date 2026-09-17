@@ -88,7 +88,7 @@ def test_transform_vcm_script(sparse_frequency_file, script_path):
     result = subprocess.run(
         ["python", script_path, "-o", base_output_path, sparse_frequency_file],
         capture_output=True, # get sub process returns
-        env=env, # otherwise windows fix wont work
+        env=env, # otherwise windows fix won't work
         text=True,
     )
     

@@ -64,7 +64,7 @@ def Read_Data(filePtr, convFactor=None):
 
     return constraint, pointMap, zeroInd
 
-# Calcualtes the average number of contacts
+# Calculates the average number of contacts
 def avgCalc(constraint, convFactor):
     avgIf = constraint.mean(axis=0)[2]
 
@@ -112,7 +112,7 @@ def Proc_PDB(inputPtr, comparePtr):
 '''SOURCE: https://github.com/mbglab/EVR'''
 def WritePDB(positions, pdb_file, ctype = "0"):
     '''Save the result as a .pdb file'''
-    Path("./out").mkdir(exist_ok=True) # Create out dir if it doesnt exist
+    Path("./out").mkdir(exist_ok=True) # Create out dir if it does not exist
 
     o_file = open(pdb_file, "w")
     o_file.write("\n")
