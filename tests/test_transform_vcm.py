@@ -71,8 +71,8 @@ def test_transform_vcm_script(sparse_frequency_file, script_path):
 
     sets root 
     * Linux - export PYTHONPATH=/path/to/project
-    * cmd - set PYTHONPATH=C:\path\to\project
-    * powershell - $env:PYTHONPATH="C:\path\to\project"
+    * cmd - set PYTHONPATH=C:\\path\\to\\project
+    * powershell - $env:PYTHONPATH="C:\\path\\to\\project"
     '''
 
     # begin windows fix
@@ -126,8 +126,8 @@ def test_transform_vcm_script_no_args(sparse_frequency_file, script_path):
 
     sets root 
     * Linux - export PYTHONPATH=/path/to/project
-    * cmd - set PYTHONPATH=C:\path\to\project
-    * powershell - $env:PYTHONPATH="C:\path\to\project"
+    * cmd - set PYTHONPATH=C:\\path\\to\\project
+    * powershell - $env:PYTHONPATH="C:\\path\\to\\project"
     '''
 
     # begin windows fix

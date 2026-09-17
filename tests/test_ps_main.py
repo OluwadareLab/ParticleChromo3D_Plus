@@ -8,6 +8,12 @@ from ParticleChromo3D.particle_chromo_logger import setup_logger
 
 logger = setup_logger()
 
+@pytest.fixture
+def env_with_pythonpath():
+    env = os.environ.copy()
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    env["PYTHONPATH"] = project_root + os.pathsep + env.get("PYTHONPATH", "")
+    return env
 
 @pytest.fixture
 def script_path():
@@ -21,7 +27,7 @@ def input_file():
 def bad_input_file():
     return os.path.join("exampleIfs", "nonexistent_file.txt")
 
-def test_ps_script_runs_successfully(script_path, input_file):
+def test_ps_script_runs_successfully(script_path, input_file, env_with_pythonpath):
     logger.warning("\nRunning long test: This may take a while...")
     with tempfile.NamedTemporaryFile(mode='r+', delete=False) as tmpfile:
         base_output_path = tmpfile.name
@@ -30,7 +36,8 @@ def test_ps_script_runs_successfully(script_path, input_file):
         ["python", script_path, "-o", base_output_path, input_file],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        text=True,
+        env=env_with_pythonpath
     )
 
     # The actual file written by the script will be base_output_path + "NAME-UUID.log"
@@ -64,12 +71,13 @@ def test_ps_script_runs_successfully(script_path, input_file):
     assert result.returncode == 0, "Script did not exit cleanly"
 
 
-def test_ps_script_fails_with_missing_file(script_path, bad_input_file):
+def test_ps_script_fails_with_missing_file(script_path, bad_input_file, env_with_pythonpath):
     result = subprocess.run(
         ["python", script_path, bad_input_file],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        text=True,
+        env=env_with_pythonpath
     )
 
     logger.debug(f"STDOUT: {result.stdout}")
